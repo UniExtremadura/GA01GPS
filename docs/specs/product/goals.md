@@ -5,8 +5,8 @@
 | ID | Objetivo | Resultado esperado |
 |---|---|---|
 | G-01 | Gestión centralizada del festival | El personal autorizado puede gestionar desde una misma plataforma los principales elementos necesarios para la organización de Subsonic, como usuarios, entradas, espacios, servicios, proveedores, merchandising e incidencias. |
-| G-02 | Experiencia clara para el usuario | Los usuarios pueden realizar las acciones principales de la plataforma de forma comprensible, sabiendo qué información deben introducir y cuál ha sido el resultado de cada operación. |
-| G-03 | Gestión diferenciada por roles | La aplicación permite diferenciar las acciones disponibles según el tipo de usuario y restringir las operaciones administrativas al personal autorizado. |
+| G-02 | Experiencia clara para el usuario | Los usuarios realizan las acciones principales de la plataforma de forma comprensible, sabiendo qué información deben introducir y cuál ha sido el resultado de cada operación. |
+| G-03 | Gestión diferenciada por roles | La aplicación permite diferenciar las acciones disponibles según el tipo de usuario y restringir las operaciones administrativas al personal autorizado mediante el inicio de sesion de cuentas admin. |
 | G-04 | Incremento funcional y revisable | El equipo produce una versión estable del proyecto que puede instalarse, ejecutarse y evaluarse siguiendo únicamente la documentación disponible. |
 | G-05 | Desarrollo organizado y trazable | Las funcionalidades principales pueden relacionarse con los objetivos, las tareas realizadas, el código desarrollado y las pruebas o evidencias correspondientes. |
 
