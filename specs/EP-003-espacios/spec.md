@@ -127,6 +127,31 @@ Como usuario registrado, quiero reservar un espacio disponible en Subsonic Festi
  US-002 — Inicio y cierre de sesión.
  US-009 — Consulta y filtrado de espacios disponibles.
 
+
+Este requisito vamos a detallarlo:
+
+# Ejemplos
+
+- Un usuario autenticado consulta los espacios, selecciona uno disponible y confirma su reserva.
+- Un usuario selecciona un espacio pero cancela la operación antes de confirmarla.
+- Un usuario intenta reservar un espacio que ya no está disponible y el sistema rechaza la reserva.
+
+# Casos límite
+
+- Dos usuarios intentan reservar el mismo espacio para la misma disponibilidad.
+- El espacio deja de estar disponible entre la consulta y la confirmación.
+- El usuario intenta realizar una reserva sin haber iniciado sesión.
+- Se produce un error durante el proceso y la reserva no llega a completarse.
+
+# Supuestos
+
+- El usuario está correctamente autenticado.
+- Los espacios han sido previamente registrados en el sistema.
+- La disponibilidad de los espacios se encuentra actualizada.
+- Las reservas realizadas durante las pruebas son ficticias.
+
+ 
+
 ## US-011 — GESTIÓN DE ESPACIOS
 
 # Necesidad
