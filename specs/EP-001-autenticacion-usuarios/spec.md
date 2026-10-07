@@ -75,6 +75,29 @@ Como asistente al festival, quiero registrarme en Subsonic Festival para dispone
 No presenta dependencias funcionales previas.
 
 
+Vamos a detallarlo más como se nos pide en la sesión 2: 
+
+# Ejemplos
+
+- Un usuario completa correctamente todos los campos obligatorios del formulario y el sistema crea su cuenta.
+- Un usuario intenta registrarse dejando un campo obligatorio vacío y el sistema le informa de que debe completarlo.
+- Un usuario introduce un identificador que ya está asociado a otra cuenta y el sistema rechaza el registro.
+
+# Casos límite
+
+- El usuario intenta enviar el formulario sin completar ningún campo.
+- El usuario introduce datos con una longitud superior a la permitida.
+- El usuario intenta registrarse utilizando un identificador que ya existe.
+- Se produce un error durante el proceso de registro y la cuenta no llega a crearse correctamente.
+
+# Supuestos
+
+- El usuario dispone de acceso a la aplicación.
+- El sistema dispone de los mecanismos necesarios para almacenar las cuentas.
+- Los campos obligatorios y sus reglas de validación han sido definidos previamente.
+- Los datos utilizados durante las pruebas son ficticios.
+
+
 
 ### US-002 — INICIO Y CIERRE DE SESIÓN
 
@@ -123,6 +146,30 @@ Como usuario registrado, quiero iniciar y cerrar sesión en Subsonic Festival pa
 # Dependencias
 
  US-001 — Registro de usuario, para las cuentas creadas mediante el proceso de registro de la plataforma.
+
+
+ Este también vamos a detallarlo más como el anterior:
+
+# Ejemplos
+
+- Un usuario introduce unas credenciales correctas y accede a las funcionalidades correspondientes a su rol.
+- Un usuario introduce unas credenciales incorrectas y el sistema rechaza el acceso.
+- Un administrador inicia sesión y puede acceder a las funcionalidades administrativas.
+- Un usuario autenticado cierra sesión y deja de tener acceso a las funcionalidades protegidas.
+
+# Casos límite
+
+- El usuario intenta iniciar sesión dejando alguno de los campos obligatorios vacío.
+- El usuario introduce credenciales correspondientes a una cuenta inexistente.
+- Un usuario sin permisos administrativos intenta acceder a una funcionalidad reservada para administradores.
+- Un usuario intenta acceder a una funcionalidad protegida después de haber cerrado sesión.
+
+# Supuestos
+
+- La cuenta del usuario ya existe en el sistema.
+- Las credenciales necesarias para la autenticación se encuentran correctamente almacenadas.
+- Cada cuenta tiene asignado el rol correspondiente.
+- El sistema de control de acceso está disponible.
 
  
 
