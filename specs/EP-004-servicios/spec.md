@@ -124,6 +124,29 @@ Como usuario registrado, quiero adquirir un servicio disponible en Subsonic Fest
  US-002 — Inicio y cierre de sesión.
  US-012 — Consulta de servicios.
 
+
+Vamos a detallar este requisito:
+
+# Ejemplos
+
+- Un usuario autenticado selecciona un servicio disponible y confirma su adquisición.
+- Un usuario consulta un servicio y cancela la operación antes de confirmarla.
+- Un usuario intenta adquirir un servicio que se encuentra deshabilitado y el sistema rechaza la operación.
+
+# Casos límite
+
+- El servicio deja de estar disponible antes de confirmar la operación.
+- El usuario intenta adquirir un servicio sin haber iniciado sesión.
+- Se produce un error mientras se registra la adquisición.
+- El servicio seleccionado ha sido eliminado o deshabilitado después de haber sido consultado.
+
+# Supuestos
+
+- El usuario se encuentra autenticado.
+- Los servicios han sido previamente registrados en el sistema.
+- La información sobre la disponibilidad de los servicios se encuentra actualizada.
+- La operación no implica pagos económicos reales.
+
 ---
 
 ## US-014 — GESTIÓN DE SERVICIOS
