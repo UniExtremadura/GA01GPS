@@ -1,0 +1,18 @@
+1. Capacidad Diaria del Equipo;;;;;
+Miembro (Rol);Horas día;Otros proyectos;Tiempo personal;Actividades Scrum;Horas-Esfuerzo Disponible
+Javi López (PO);4;2;0,25;0,75;1
+Alfonso Guillén (SM);3,5;1,5;0,25;0,75;1
+Manuel Lorenzo (TL);4;2;0,25;0,25;1,5
+Juan Antonio (QA);3;1;0,25;0,25;1,5
+Raúl Arias (Dev);3,5;1,5;0,5;0,25;1,25
+TOTALES;;;;;6,25 horas/día
+;;;;;
+;;;;;
+2. Presupuesto y Costes del Proyecto;;;;;
+Rol;Integrante;Horas/Semana;Coste (€/hora);Coste Semanal;Coste Total Proyecto (x6 semanas)
+Product Owner;Javi López;5;35 €;175 €;1.050 €
+Scrum Master;Alfonso Guillén;5;30 €;150 €;900 €
+Tech Lead;Manuel Lorenzo;7,5;40 €;300 €;1.800 €
+DevOps / QA;Juan Antonio Jara;7,5;35 €;262,50 €;1.575 €
+Developer;Raúl Arias;6,25;25 €;156,25 €;937,50 €
+TOTAL PRESUPUESTO;;31,25 h/sem;;1.043,75€/sem;6.262,50 €
