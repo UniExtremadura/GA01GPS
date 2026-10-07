@@ -28,7 +28,7 @@ No incluye sistemas de autenticación mediante plataformas externas ni el uso de
 
 # Historias de usuario
 
-### US-001 — Registro de usuario
+### US-001 — REGISTRO DE USUARIO
 
 # Necesidad
 
@@ -76,7 +76,7 @@ No presenta dependencias funcionales previas.
 
 
 
-### US-002 — Inicio y cierre de sesión
+### US-002 — INICIO Y CIERRE DE SESIÓN
 
 # Necesidad
 
@@ -126,8 +126,105 @@ Como usuario registrado, quiero iniciar y cerrar sesión en Subsonic Festival pa
 
  
 
-### US-003 — Consulta y modificación del perfil
+### US-003 — CONSULTA Y MODIFICACIÓN DEL PERFIL.
+
+
+# Necesidad
+
+Los usuarios registrados necesitan poder consultar la información asociada a su cuenta y modificar los datos permitidos para mantener su perfil actualizado.
+
+# Objetivo
+
+Este requisito contribuye a los siguientes objetivos del proyecto:
+
+ G-01 — Gestión centralizada del festival.
+ G-02 — Experiencia clara para el usuario.
+ G-03 — Gestión diferenciada por roles.
+
+# Historia de usuario
+
+Como usuario registrado, quiero consultar y modificar los datos permitidos de mi perfil para mantener actualizada la información asociada a mi cuenta.
+
+# Criterios de aceptación
+
+ US-003-AC-01: El usuario autenticado puede consultar la información disponible en su perfil.
+ US-003-AC-02: El usuario puede modificar los campos que estén habilitados para edición.
+ US-003-AC-03: El sistema valida los nuevos datos antes de guardar los cambios.
+ US-003-AC-04: Si los datos introducidos no son válidos, el sistema informa al usuario y no guarda los cambios incorrectos.
+ US-003-AC-05: Si la modificación se realiza correctamente, el sistema informa al usuario del resultado.
+ US-003-AC-06: Un usuario no puede modificar el perfil de otro usuario mediante las funciones destinadas a la gestión de su propio perfil.
+
+# Reglas
+
+- El usuario solo podrá modificar los campos de su perfil que estén habilitados para edición.
+- Los datos modificados deberán cumplir las mismas reglas de validación establecidas para dichos campos.
+- Cada usuario únicamente podrá gestionar su propio perfil mediante esta funcionalidad.
+
+# Restricciones
+
+- El usuario deberá haber iniciado sesión previamente.
+- Durante el desarrollo y las pruebas no se utilizarán datos personales o sensibles reales.
+- La modificación del perfil deberá respetar los permisos asociados al usuario.
+
+# Requisitos no funcionales
+
+- La información del perfil deberá mostrarse de forma clara y comprensible.
+- El sistema deberá proporcionar información sobre el resultado de las modificaciones realizadas.
+- Los datos deberán tratarse de forma segura.
+- La interfaz deberá mantener los criterios de usabilidad y accesibilidad establecidos para el proyecto.
+
+# Dependencias
+
+- US-002 — Inicio y cierre de sesión.
 
 
 
-### US-004 — Gestión de usuarios por administrador
+### US-004 — GESTIÓN DE USUARIO POR ADMINISTRADOR.
+
+# Necesidad
+
+El personal de administración necesita poder consultar y gestionar las cuentas de usuario de Subsonic Festival para mantener organizada y controlada la información de los usuarios de la plataforma.
+
+# Objetivo
+
+Este requisito contribuye a los siguientes objetivos del proyecto:
+
+ G-01 — Gestión centralizada del festival.
+ G-03 — Gestión diferenciada por roles.
+ G-05 — Desarrollo organizado y trazable.
+
+# Historia de usuario
+
+Como administrador, quiero consultar y gestionar los usuarios registrados en Subsonic Festival para mantener controladas las cuentas utilizadas en la plataforma.
+
+# Criterios de aceptación
+
+ US-004-AC-01: El administrador puede consultar los usuarios registrados en la plataforma.
+ US-004-AC-02: El administrador puede acceder a la información necesaria de cada usuario para realizar las operaciones de gestión previstas.
+ US-004-AC-03: El administrador puede realizar las operaciones de gestión de usuarios permitidas por el sistema.
+ US-004-AC-04: Un usuario sin permisos de administrador no puede acceder a las funciones de gestión de usuarios.
+ US-004-AC-05: El sistema informa del resultado de las operaciones realizadas.
+ US-004-AC-06: Si se produce un error durante una operación, el sistema informa al administrador y evita dejar los datos en un estado inconsistente.
+
+# Reglas
+
+- Solo los usuarios con permisos de administrador pueden acceder a la gestión de usuarios.
+- Las operaciones realizadas deberán respetar los permisos definidos para cada tipo de usuario.
+- Las modificaciones realizadas deberán mantener la integridad de la información almacenada.
+
+# Restricciones
+
+- El administrador deberá haber iniciado sesión previamente.
+- Durante el desarrollo y las pruebas se utilizarán únicamente cuentas y datos ficticios.
+- Las operaciones administrativas deberán respetar las reglas de seguridad y privacidad establecidas para el proyecto.
+
+# Requisitos no funcionales
+
+- El acceso a las funciones administrativas deberá estar protegido mediante control de permisos.
+- La información deberá mostrarse de forma clara y comprensible.
+- Las operaciones deberán proporcionar información sobre su resultado.
+- Los errores no deberán provocar estados inconsistentes en los datos.
+
+# Dependencias
+
+ US-002 — Inicio y cierre de sesión.
