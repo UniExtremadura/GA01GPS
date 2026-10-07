@@ -8,10 +8,10 @@ También se incluyen las funciones necesarias para que el personal administrador
 
 # Relación con los objetivos del proyecto
 
-- G-01 — Gestión centralizada del festival.
-- G-02 — Experiencia clara para el usuario.
-- G-03 — Gestión diferenciada por roles.
-- G-05 — Desarrollo organizado y trazable.
+ G-01 — Gestión centralizada del festival.
+ G-02 — Experiencia clara para el usuario.
+ G-03 — Gestión diferenciada por roles.
+ G-05 — Desarrollo organizado y trazable.
 
 # Alcance de la épica
 
@@ -126,6 +126,30 @@ Como asistente registrado, quiero adquirir de forma simulada una entrada disponi
 
  US-002 — Inicio y cierre de sesión.
  US-005 — Consulta de entradas disponibles.
+
+
+Este requisito vamos a detallarlo como se pide en la sesión 2:
+
+# Ejemplos
+
+- Un usuario autenticado selecciona una entrada disponible, confirma la operación y la entrada queda asociada a su cuenta.
+- Un usuario selecciona una entrada pero cancela la operación antes de confirmarla.
+- Un usuario intenta adquirir una entrada que ya no está disponible y el sistema rechaza la operación.
+
+# Casos límite
+
+- La entrada deja de estar disponible entre el momento de la consulta y la confirmación de la adquisición.
+- El usuario intenta confirmar una adquisición sin haber iniciado sesión.
+- Se produce un error durante la operación antes de que la entrada quede asociada al usuario.
+- El usuario intenta realizar la operación sobre una entrada deshabilitada.
+
+# Supuestos
+
+- El usuario dispone de una cuenta válida y ha iniciado sesión.
+- Existen entradas previamente registradas en el sistema.
+- La información de disponibilidad se encuentra actualizada antes de confirmar la operación.
+- La adquisición es únicamente simulada y no implica pagos económicos reales.
+ 
 
 
 ## US-007 — CONSULTA DE ENTRADAS ADQUIRIDAS
