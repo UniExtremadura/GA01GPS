@@ -20,17 +20,18 @@ Una historia de usuario solo puede seleccionarse para un Sprint durante el Sprin
 - [ ] Los permisos por rol están definidos (qué puede y qué no puede hacer cada tipo de usuario en esta historia).
 
 ## Criterios de aceptación
-- [ ] Hay criterios de aceptación definidos (`US-XXX-AC-NN`).
+- [ ] Hay criterios de aceptación definidos, identificados y asociados a la historia de usuario correspondiente.
 - [ ] Son observables y verificables por una revisión o prueba.
 - [ ] Describen el comportamiento esperado, no una implementación concreta.
-- [ ] Incluyen al menos un caso de error o caso límite relevante (por ejemplo, datos inválidos o acción no permitida para el rol).
+- [ ] Incluyen los comportamientos esperados ante errores o situaciones excepcionales cuando sean relevantes para la funcionalidad.
+- En los requisitos seleccionados para la muestra detallada se documentan expresamente ejemplos, casos límite y supuestos.
 
 ## Planificación
 - [ ] Tiene prioridad MoSCoW asignada y justificada (valor, riesgo, dependencias).
-- [ ] Tiene una estimación en horas-persona, fruto del Planning Poker.
+- [ ] Tiene una estimación en horas-persona obtenida a partir de las estimaciones individuales de los integrantes y consensuada posteriormente por el equipo.
 - [ ] Tiene el grado de incertidumbre identificado (baja, media, alta).
 - [ ] Sus predecesores y dependencias (funcionales, técnicas y externas) son conocidos y están registrados.
-- [ ] Es suficientemente pequeña para completarse dentro de **una iteración (1 semana)** con la capacidad efectiva del equipo. Si supera **[POR DEFINIR] h-p**, se divide antes de entrar.
+- [ ] Es suficientemente pequeña para completarse dentro de una iteración de una semana, teniendo en cuenta la capacidad efectiva del equipo. Si el esfuerzo estimado supera la capacidad disponible para asignarle trabajo, deberá dividirse en historias más pequeñas antes de incorporarse a la iteración.
 
 ## Restricciones
 - [ ] Los requisitos no funcionales relevantes están identificados (seguridad, usabilidad, accesibilidad, rendimiento).
