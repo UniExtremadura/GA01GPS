@@ -22,6 +22,16 @@ Esta épica incluye:
 
 Los espacios y reservas utilizados durante el desarrollo y las pruebas serán ficticios y tendrán únicamente finalidad académica.
 
+
+# Versión de referencia 
+
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica 
+
+Permitir a los usuarios consultar los espacios disponibles en Subsonic Festival, conocer sus características y realizar reservas según su disponibilidad. Además, los administradores podrán gestionar la información de los espacios, actualizar sus características y controlar su disponibilidad para facilitar la organización del festival.
+
+
 # Historias de usuario
 
 ## US-009 — CONSULTA Y FILTRADO DE ESPACIOS DISPONIBLES
@@ -40,6 +50,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario de Subsonic Festival, quiero consultar y filtrar los espacios disponibles para encontrar de forma sencilla aquellos que se ajusten a mis necesidades.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 6 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste en mostrar los espacios disponibles y permitir su filtrado según determinados criterios. Se trata de operaciones de consulta cuyo comportamiento está bien delimitado, aunque será necesario definir los filtros y comprobar que los resultados mostrados sean correctos.
+- Predecesores: Ninguno.
+- Plan inicial: Se propone desarrollar durante las primeras fases del proyecto, ya que permite a los usuarios conocer los espacios del festival y constituye la base para otras funcionalidades relacionadas con su utilización.
+
 
 # Criterios de aceptación
 
@@ -91,6 +112,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario registrado, quiero reservar un espacio disponible en Subsonic Festival para poder hacer uso de él según las condiciones establecidas.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Should.
+- Estimación: 9 horas-persona.
+- Incertidumbre: Alta.
+- Justificación de la incertidumbre: La reserva requiere comprobar la disponibilidad de los espacios, registrar correctamente la operación y evitar conflictos cuando varios usuarios intenten reservar un mismo espacio. También deben contemplarse situaciones como la cancelación de la operación, los errores durante el proceso o los cambios de disponibilidad.
+- Predecesores: US-002 y US-009.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación y la consulta de espacios, ya que el usuario debe iniciar sesión, seleccionar un espacio y comprobar su disponibilidad antes de confirmar una reserva.
+
 
 # Criterios de aceptación
 
@@ -169,6 +201,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario autorizado, quiero gestionar los espacios de Subsonic Festival para mantener actualizada su información y disponibilidad.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 8 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para crear, modificar y deshabilitar espacios, validar los datos introducidos y garantizar que únicamente los usuarios con permisos de administración puedan realizar estas acciones. También será necesario mantener actualizada la información sobre las características y la disponibilidad de los espacios.
+- Predecesores: US-002.
+- Plan inicial: Se propone desarrollar una vez implementado el sistema de autenticación y control de acceso. Esta funcionalidad permitirá mantener actualizada la información de los espacios y facilitará su posterior consulta y utilización.
+
 
 # Criterios de aceptación
 
