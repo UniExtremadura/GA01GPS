@@ -22,6 +22,16 @@ Esta épica incluye:
 
 Las incidencias utilizadas durante el desarrollo y las pruebas serán ficticias y tendrán únicamente finalidad académica.
 
+
+# Versión de referencia 
+
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica 
+
+Permitir a los usuarios registrar incidencias relacionadas con el funcionamiento de Subsonic Festival, proporcionando información sobre los problemas detectados. Además, los administradores podrán consultar, gestionar y actualizar el estado de las incidencias registradas, facilitando su seguimiento y resolución y contribuyendo a mejorar la organización y el funcionamiento del festival.
+
+
 # Historias de usuario
 
 ## US-019 — REGISTRO Y GESTIÓN DE INCIDENCIAS
@@ -44,6 +54,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 Como usuario de Subsonic Festival, quiero registrar una incidencia para comunicar un problema detectado en la plataforma.
 
 Como administrador, quiero consultar y gestionar las incidencias registradas para realizar un seguimiento de los problemas comunicados por los usuarios.
+
+# Información de planificación
+
+- Prioridad MoSCoW: Should.
+- Estimación: 9 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: La funcionalidad incluye tanto el registro de incidencias por parte de los usuarios como su gestión administrativa. Es necesario validar la información introducida, almacenar correctamente las incidencias, permitir la modificación de su estado y controlar que únicamente los administradores puedan realizar las operaciones de gestión. También deben contemplarse posibles errores durante el registro y la actualización de las incidencias.
+- Predecesores: US-002.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación y el control de acceso, ya que es necesario identificar a los usuarios que registran las incidencias y garantizar que las funciones de administración únicamente estén disponibles para los usuarios autorizados. Su incorporación se realizará teniendo en cuenta la capacidad efectiva del equipo y el avance de los requisitos de mayor prioridad.
+
+
 
 # Criterios de aceptación
 
