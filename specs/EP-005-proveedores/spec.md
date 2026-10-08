@@ -20,6 +20,16 @@ Esta épica incluye:
 
 Los proveedores y los datos utilizados durante el desarrollo y las pruebas serán ficticios y tendrán únicamente finalidad académica.
 
+
+# Versión de referencia 
+
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica
+
+El resultado esperado sería permitir la consulta de información sobre los proveedores vinculados a Subsonic Festival, mostrando sus principales características y los servicios o productos que ofrecen. Además, los administradores podrán registrar, modificar y gestionar la información de los proveedores para mantener actualizado el catálogo y facilitar la organización del festival.
+
+
 # Historias de usuario
 
 ## US-015 — CONSULTA DE INFORMACIÓN DE PROVEEDORES
@@ -38,6 +48,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario de Subsonic Festival, quiero consultar la información disponible de los proveedores para conocer los proveedores asociados a la plataforma.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Should.
+- Estimación: 5 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste en consultar y mostrar la información de los proveedores registrados en el sistema. Se trata de una operación de consulta con un comportamiento bien delimitado, aunque será necesario comprobar que los datos mostrados sean correctos y estén actualizados.
+- Predecesores: Ninguno.
+- Plan inicial: Se propone desarrollar durante las primeras fases del proyecto, una vez definida la estructura de datos de los proveedores, para permitir consultar su información y facilitar su posterior gestión.
+
 
 # Criterios de aceptación
 
@@ -89,6 +110,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como administrador, quiero gestionar los proveedores de Subsonic Festival para mantener actualizada la información de los proveedores asociados a la plataforma.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 7 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para registrar, modificar y eliminar o deshabilitar proveedores, validar los datos introducidos y controlar que únicamente los usuarios con permisos de administración puedan realizar estas acciones. También será necesario mantener la coherencia de la información almacenada.
+- Predecesores: US-002 y US-015.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación y la consulta de proveedores, ya que es necesario controlar el acceso a las funciones administrativas y disponer de una estructura de información definida para gestionar los proveedores.
+
 
 # Criterios de aceptación
 
