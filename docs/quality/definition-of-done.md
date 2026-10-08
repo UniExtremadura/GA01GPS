@@ -1,170 +1,117 @@
 # Subsonic — Definition of Done
 
+**Equipo:** GPS01-2026 · **Versión:** 1.1.0 (propuesta de revisión) · 
+
 ## Propósito
 
 El **Definition of Done (DoD)** establece las condiciones mínimas que debe cumplir una historia de usuario para poder considerarse terminada.
 
-Una funcionalidad no se considera terminada únicamente porque haya sido programada o funcione en condiciones ideales.
+Una funcionalidad no se considera terminada únicamente porque haya sido programada o funcione en condiciones ideales. Para alcanzar el estado **Done**, la historia deberá estar implementada, verificada, integrada, documentada y aceptada de acuerdo con las normas del proyecto.
 
-Para alcanzar el estado **Done**, la historia deberá estar implementada, verificada, integrada y documentada de acuerdo con las normas del proyecto.
+**Definición de "problema crítico".** A efectos de este documento, es todo defecto que impide cumplir un criterio de aceptación obligatorio, rompe una funcionalidad ya operativa, expone datos o credenciales, o impide ejecutar la demo.
+
+Todas las condiciones se aplican a cada historia, salvo que se marquen *(si aplica)*. Cuando una condición *(si aplica)* no se cumple por no ser aplicable, se anota en la PR cuál y por qué.
 
 ---
 
-## 1. Implementación
+## Implementación
 
-- [ ] La funcionalidad descrita en la historia de usuario ha sido completamente implementada.
-- [ ] El comportamiento desarrollado corresponde con la historia aprobada.
+- [ ] La funcionalidad descrita en la historia `US-XXX` está completamente implementada.
 - [ ] La implementación respeta la arquitectura y las convenciones técnicas acordadas por el equipo.
-- [ ] No existen fragmentos de código temporal necesarios únicamente para que la funcionalidad funcione.
-- [ ] No quedan errores críticos conocidos relacionados con la implementación.
-- [ ] El código es suficientemente claro y mantenible para que pueda ser comprendido por otros integrantes del equipo.
+- [ ] No quedan fragmentos de código temporal, depuración ni código comentado necesario para que funcione.
+- [ ] No quedan problemas críticos conocidos.
+
+## Criterios de aceptación
+
+- [ ] Se han comprobado **todos** los criterios de aceptación de la historia (`US-XXX-AC-NN`) y todos se cumplen.
+- [ ] Se han comprobado los casos de error y casos límite definidos en la historia.
+- [ ] Hay evidencia de la comprobación enlazada en la PR (resultado de pruebas, captura o registro).
+
+Una historia no puede considerarse terminada si algún criterio de aceptación obligatorio no se cumple.
+
+## Pruebas
+
+- [ ] Existen pruebas (automáticas o manuales documentadas) que cubren cada criterio de aceptación.
+- [ ] Las pruebas cubren el comportamiento principal y, al menos, un error o caso límite relevante.
+- [ ] Todas las pruebas existentes siguen pasando y no se han introducido regresiones críticas.
+- [ ] Las pruebas repetitivas se automatizan siempre que sea razonable.
+
+## Integración y ejecución
+
+- [ ] El cambio se ha integrado mediante una Pull Request desde la rama `feature/US-XXX`, sin conflictos pendientes.
+- [ ] El pipeline de integración está en verde.
+- [ ] El proyecto se inicia correctamente desde la versión integrada, y la funcionalidad se puede demostrar desde ella.
+- [ ] No hay pasos manuales sin documentar y las dependencias nuevas están declaradas.
+- [ ] El cambio no rompe funcionalidades principales que ya estaban operativas.
+
+No se considera terminada una historia que funcione solo en el entorno o rama individual de un integrante.
+
+## Requisitos no funcionales
+
+Cuando la historia los afecte (si aplica), se han comprobado y se deja constancia de cuáles se consideraron:
+
+**Seguridad y datos**
+- [ ] Las entradas del usuario se validan.
+- [ ] Se comprueban los permisos del rol (cliente, proveedor, administrador): un usuario sin autorización no puede realizar operaciones restringidas.
+- [ ] No hay contraseñas, claves, tokens ni archivos `.env` reales en el código ni en el repositorio.
+- [ ] Los datos de desarrollo y pruebas son ficticios. No hay datos personales, bancarios ni sensibles reales.
+
+**Usabilidad y accesibilidad**
+- [ ] Las acciones principales informan claramente de su resultado.
+- [ ] Los mensajes de error explican qué ha ocurrido y los errores recuperables permiten continuar.
+- [ ] La interfaz es coherente con el resto de Subsonic y respeta los requisitos de accesibilidad aplicables.
+
+**Rendimiento y restricciones**
+- [ ] Se han considerado los requisitos de rendimiento cuando son relevantes.
+- [ ] La implementación respeta las restricciones de `goals.md` y los principios de `constitution.md`.
+
+## Documentación
+
+- [ ] La documentación técnica relevante está actualizada.
+- [ ] La documentación de usuario está actualizada *(si aplica)*.
+- [ ] El `README.md` está actualizado si cambian la instalación, la configuración o la ejecución.
+- [ ] Las decisiones o desviaciones relevantes están registradas en la Wiki.
+
+La documentación debe permitir que otro integrante comprenda el cambio sin depender de quien lo implementó.
+
+## Trazabilidad
+
+- [ ] Los commits y la rama referencian el ID de la historia (`US-XXX`).
+- [ ] La historia sigue asociada a su épica (`EP-XXX`) y al menos a un objetivo de `goals.md`.
+- [ ] Las tareas (`TK-XXX`) y las pruebas o evidencias se pueden relacionar con la historia.
+
+Cadena de trazabilidad: **Misión → Objetivos → Épicas → Historias → Tareas → Código y pruebas → Evidencias**
+
+## Revisión y aceptación
+
+- [ ] La PR ha sido aprobada por **al menos una persona distinta del autor**.
+- [ ] Se han resuelto los problemas bloqueantes detectados en la revisión.
+- [ ] El Product Owner ha aceptado la historia, normalmente en la Sprint Review, tras comprobar el valor aportado y los criterios de aceptación.
 
 ---
 
-## 2. Criterios de aceptación
+## Criterio final y decisión
 
-- [ ] Se han comprobado todos los criterios de aceptación definidos en la historia de usuario.
-- [ ] Todos los criterios obligatorios se cumplen correctamente.
-- [ ] El comportamiento implementado coincide con el especificado.
-- [ ] Se dispone de evidencias de la comprobación cuando sean necesarias.
-- [ ] Los principales casos de error definidos en la historia han sido comprobados.
+Una historia es **Done** cuando todas las condiciones aplicables han sido comprobadas y no existe ningún problema crítico conocido.
 
-Una historia no podrá considerarse terminada si alguno de sus criterios de aceptación obligatorios no se cumple.
+**No es Done** una historia que: esté programada pero no probada, cumpla solo parte de sus criterios de aceptación, funcione solo en el entorno del desarrollador, no esté integrada, introduzca problemas críticos o tenga documentación pendiente. Permanece como trabajo pendiente.
 
----
+**Quién comprueba y quién cierra**
 
-## 3. Pruebas
+| Quién | Qué hace |
+|---|---|
+| **Autor** | Hace una autocomprobación de este documento antes de abrir la PR. |
+| **Revisor de la PR** (cualquier otro integrante) | Verifica la implementación, las pruebas y la integración. |
+| **Tech Lead** | Resuelve las dudas sobre coherencia técnica y arquitectura. |
+| **DevOps / QA** | Resuelve las dudas sobre pruebas, pipeline, entorno y requisitos no funcionales. |
+| **Scrum Master** | Comprueba que se siguió el proceso y que no hay bloqueos sin gestionar. |
+| **Product Owner** | Acepta la historia y es quien la cierra como Done. |
 
-- [ ] Se han realizado las pruebas necesarias para comprobar la funcionalidad.
-- [ ] Se ha probado el comportamiento esperado en los casos principales.
-- [ ] Se han probado los errores y casos límite relevantes.
-- [ ] Las pruebas existentes relacionadas con la funcionalidad continúan funcionando.
-- [ ] No se han introducido regresiones críticas conocidas.
-- [ ] Las pruebas manuales o automatizadas realizadas pueden identificarse o documentarse cuando sea necesario.
+Si el PO rechaza una historia, vuelve al backlog con el motivo registrado en la Wiki.
 
-Siempre que resulte razonable, se favorecerá la automatización de las pruebas repetitivas.
+## Historial de versiones
 
----
-
-## 4. Integración
-
-- [ ] Los cambios están integrados en la rama correspondiente del proyecto.
-- [ ] No existen conflictos pendientes con otros cambios del equipo.
-- [ ] La versión integrada del proyecto puede ejecutarse correctamente.
-- [ ] La nueva funcionalidad funciona también después de su integración con el resto del sistema.
-- [ ] La integración no rompe funcionalidades principales que ya estaban operativas.
-- [ ] Los cambios realizados están registrados correctamente mediante Git.
-
-No se considerará terminada una historia que funcione únicamente en el entorno o rama individual de un integrante.
-
----
-
-## 5. Seguridad y datos
-
-Cuando sea aplicable a la historia:
-
-- [ ] Las entradas del usuario son validadas.
-- [ ] Se han comprobado los permisos correspondientes al tipo de usuario.
-- [ ] Un usuario sin autorización no puede realizar operaciones restringidas.
-- [ ] No se han incluido contraseñas, claves privadas, tokens u otras credenciales sensibles directamente en el código.
-- [ ] Los datos utilizados para desarrollo y pruebas son ficticios o sintéticos.
-- [ ] No se utilizan datos personales, bancarios o sensibles reales.
-
----
-
-## 6. Usabilidad y accesibilidad
-
-Cuando la historia incluya interacción con el usuario:
-
-- [ ] La funcionalidad es comprensible para el usuario al que está destinada.
-- [ ] Las acciones principales proporcionan una respuesta clara sobre su resultado.
-- [ ] Los mensajes de error permiten comprender qué ha ocurrido.
-- [ ] La interfaz mantiene coherencia con el resto de Subsonic.
-- [ ] Se han tenido en cuenta los requisitos de accesibilidad aplicables.
-- [ ] Los errores recuperables permiten al usuario continuar utilizando el sistema.
-
----
-
-## 7. Requisitos no funcionales
-
-- [ ] Se han comprobado los requisitos no funcionales asociados a la historia.
-- [ ] Se han considerado las restricciones de seguridad aplicables.
-- [ ] Se han considerado los requisitos de rendimiento cuando sean relevantes.
-- [ ] Se han considerado usabilidad y accesibilidad cuando sean aplicables.
-- [ ] La implementación respeta las restricciones establecidas en `goals.md` y `constitution.md`.
-
-Una historia no necesitará cumplir requisitos no funcionales que no sean aplicables a su contexto, pero deberá quedar claro cuáles han sido considerados.
-
----
-
-## 8. Documentación
-
-- [ ] La documentación técnica relevante se ha actualizado cuando ha sido necesario.
-- [ ] La documentación de usuario se ha actualizado si la funcionalidad modifica la forma de utilizar Subsonic.
-- [ ] Cualquier nueva configuración necesaria para ejecutar el proyecto está documentada.
-- [ ] El `README.md` se ha actualizado si han cambiado los pasos de instalación o ejecución.
-- [ ] Las decisiones relevantes tomadas durante el desarrollo están registradas cuando corresponde.
-
-La documentación deberá permitir que otro integrante del equipo pueda comprender el cambio realizado sin depender únicamente de quien lo implementó.
-
----
-
-## 9. Trazabilidad
-
-- [ ] La implementación puede relacionarse con su historia `US-XXX`.
-- [ ] La historia continúa asociada a su épica `EP-XXX`.
-- [ ] La historia puede relacionarse con al menos un objetivo de `goals.md`.
-- [ ] Las tareas realizadas pueden relacionarse con la historia correspondiente.
-- [ ] Las pruebas o evidencias realizadas pueden asociarse a la funcionalidad implementada.
-
-La trazabilidad del trabajo seguirá, cuando corresponda:
-
-**Misión → Objetivos → Épicas → Historias → Tareas → Código y pruebas → Evidencias**
-
----
-
-## 10. Revisión
-
-- [ ] El trabajo ha sido revisado siguiendo el proceso acordado por el equipo.
-- [ ] Se han corregido los problemas bloqueantes encontrados durante la revisión.
-- [ ] No existen cuestiones críticas pendientes.
-- [ ] El equipo entiende suficientemente la solución implementada.
-- [ ] El Product Owner puede comprobar que el resultado satisface el valor y los criterios de aceptación definidos.
-
----
-
-## 11. Ejecución del proyecto
-
-Antes de considerar terminada la historia:
-
-- [ ] El proyecto puede iniciarse correctamente.
-- [ ] La funcionalidad puede demostrarse desde la versión integrada.
-- [ ] No requiere pasos manuales no documentados para poder funcionar.
-- [ ] Las dependencias necesarias están correctamente declaradas.
-- [ ] La funcionalidad puede ser evaluada por otro integrante del equipo.
-
----
-
-## Criterio final
-
-Una historia de usuario se considera **Done** cuando todas las condiciones aplicables de este documento han sido comprobadas y no existe ningún problema bloqueante conocido.
-
-Si una historia:
-
-- está programada pero no probada;
-- cumple solo parte de sus criterios de aceptación;
-- funciona únicamente en el entorno del desarrollador;
-- no está integrada;
-- introduce errores críticos;
-- o requiere documentación pendiente;
-
-**no se considerará Done** y deberá permanecer como trabajo pendiente.
-
-La decisión se realizará de acuerdo con las responsabilidades del equipo:
-
-- **Product Owner:** comprueba el valor aportado y los criterios de aceptación.
-- **Tech Lead:** comprueba la coherencia técnica y la calidad de la implementación.
-- **DevOps / QA:** comprueba pruebas, integración, entorno y requisitos no funcionales.
-- **Scrum Master:** verifica que se ha seguido el proceso acordado y que no permanecen bloqueos sin gestionar.
-
-El cumplimiento del Definition of Done será común para todas las historias del proyecto, salvo que alguna condición se indique explícitamente como no aplicable.
+| Versión | Fecha | Cambios |
+|---|---|---|
+| 1.0.0 | 2026-10-01 | Versión inicial del equipo. |
+| 1.1.0 | 2026-10-01 | Propuesta de revisión: alineada con el team charter (acuerdos 14 y 17) y la constitución, condiciones verificables, secciones fusionadas (11 → 8) y responsabilidades de cierre. |
