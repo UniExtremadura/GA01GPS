@@ -42,7 +42,6 @@ Una historia de usuario solo puede seleccionarse para un Sprint durante el Sprin
 - [ ] Cualquier supuesto importante o cuestión no bloqueante está documentada explícitamente.
 
 ## Excepciones
-## Excepciones
 
 Si excepcionalmente se propone aceptar una historia que no cumple alguna
 condición del Definition of Ready, la decisión deberá ser acordada por el
