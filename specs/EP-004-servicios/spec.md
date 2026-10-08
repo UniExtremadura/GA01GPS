@@ -21,6 +21,16 @@ Esta épica incluye:
 
 Los servicios y operaciones utilizados durante el desarrollo y las pruebas serán ficticios y tendrán únicamente finalidad académica.
 
+
+# Versión de referencia (Baseline)
+
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica (Epic outcome)
+
+El resultado esperado sería permitir a los usuarios consultar los servicios disponibles en Subsonic Festival, conocer sus características y realizar adquisiciones simuladas de aquellos que les interesen. Además, los administradores podrán gestionar los servicios ofrecidos, modificar su información y controlar su disponibilidad para mantener actualizada la oferta del festival.
+
+
 # Historias de usuario
 
 ## US-012 — CONSULTA DE SERVICIOS
@@ -39,6 +49,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario de Subsonic Festival, quiero consultar los servicios disponibles para conocer las diferentes opciones ofrecidas dentro de la plataforma.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 5 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste en mostrar los servicios disponibles y sus principales características. Se trata de una operación de consulta relativamente sencilla, aunque será necesario comprobar que la información presentada sea correcta y esté actualizada.
+- Predecesores: Ninguno.
+- Plan inicial: Se propone desarrollar durante las primeras fases del proyecto, ya que permite conocer la oferta de servicios y constituye la base para su posterior adquisición.
+
 
 # Criterios de aceptación
 
@@ -89,6 +110,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario registrado, quiero adquirir un servicio disponible en Subsonic Festival para poder acceder a las prestaciones asociadas a dicho servicio.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Should.
+- Estimación: 8 horas-persona.
+- Incertidumbre: Alta.
+- Justificación de la incertidumbre: La adquisición requiere comprobar que el servicio esté disponible, registrar correctamente la operación y asociarla al usuario correspondiente. También deben contemplarse posibles errores durante el proceso, cancelaciones y cambios en la disponibilidad del servicio.
+- Predecesores: US-002 y US-012.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación y la consulta de servicios, ya que el usuario debe iniciar sesión y seleccionar un servicio disponible antes de confirmar su adquisición.
+
 
 # Criterios de aceptación
 
@@ -166,6 +198,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario autorizado, quiero gestionar los servicios de Subsonic Festival para mantener actualizada su información y disponibilidad.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 8 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para crear, modificar y deshabilitar servicios, validar los datos introducidos y garantizar que únicamente los administradores puedan realizar estas acciones. También será necesario mantener actualizada la información y disponibilidad de los servicios.
+- Predecesores: US-002.
+- Plan inicial: Se propone desarrollar una vez implementado el sistema de autenticación y control de acceso, para permitir que los administradores gestionen correctamente la oferta de servicios del festival.
+
 
 # Criterios de aceptación
 
