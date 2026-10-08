@@ -24,6 +24,16 @@ Esta épica incluye:
 
 No incluye pagos económicos reales, venta de entradas para un festival existente, integración con plataformas comerciales externas ni operaciones bancarias reales.
 
+
+# Versión de referencia 
+
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica 
+
+El resultado esperado sería permitir a los usuarios consultar las entradas disponibles para Subsonic Festival, realizar adquisiciones simuladas y visualizar las entradas asociadas a sus cuentas. Además, los administradores podrán gestionar los tipos de entradas y su disponibilidad, facilitando el control de la oferta del festival.
+
+
 # Historias de usuario
 
 ## US-005 — CONSULTA DE ENTRADAS DISPONIBLES
@@ -42,6 +52,16 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como asistente al festival, quiero consultar las entradas disponibles en Subsonic Festival para conocer las opciones existentes y poder elegir la que me interese.
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 5 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste en mostrar los diferentes tipos de entradas disponibles, incluyendo su información principal, como el precio, las características y la disponibilidad. Es una operación de consulta con un comportamiento bien delimitado.
+- Predecesores: Ninguno.
+- Plan inicial: Se propone desarrollar durante las primeras fases del proyecto, ya que constituye la base para que los usuarios puedan consultar las entradas y posteriormente realizar su adquisición.
+
 
 # Criterios de aceptación
 
@@ -90,6 +110,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como asistente registrado, quiero adquirir de forma simulada una entrada disponible para poder disponer de ella dentro de Subsonic Festival.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 9 horas-persona.
+- Incertidumbre: Alta.
+- Justificación de la incertidumbre: La adquisición requiere comprobar la disponibilidad de las entradas, asociarlas correctamente al usuario y evitar registros inconsistentes. También deben contemplarse situaciones como la cancelación de la operación, los errores durante el proceso o la falta de disponibilidad.
+- Predecesores: US-002 y US-005.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación de usuarios y la consulta de entradas, ya que el usuario debe iniciar sesión y seleccionar una entrada disponible antes de confirmar su adquisición.
+
 
 # Criterios de aceptación
 
@@ -170,6 +201,16 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 
 Como asistente registrado, quiero consultar las entradas asociadas a mi cuenta para poder revisar las entradas que he adquirido en Subsonic Festival.
 
+# Información de planificación
+
+- Prioridad MoSCoW: Should.
+- Estimación: 5 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste en recuperar y mostrar las entradas que han sido adquiridas previamente por un usuario. La principal consideración es garantizar que cada usuario únicamente pueda consultar las entradas asociadas a su propia cuenta.
+- Predecesores: US-002 y US-006.
+- Plan inicial: Se propone desarrollar después de implementar la adquisición simulada de entradas, ya que es necesario disponer de entradas asociadas a los usuarios para poder consultarlas.
+
+
 # Criterios de aceptación
 
  US-007-AC-01: El usuario autenticado puede consultar las entradas asociadas a su cuenta.
@@ -220,6 +261,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como administrador, quiero gestionar las entradas de Subsonic Festival para mantener actualizada la información y disponibilidad de los diferentes tipos de entrada.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 8 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para crear, modificar y deshabilitar tipos de entradas, validar la información introducida y controlar que estas acciones únicamente puedan realizarlas usuarios con permisos de administración.
+- Predecesores: US-002.
+- Plan inicial: Se propone desarrollar una vez implementado el sistema de autenticación y control de acceso. Esta funcionalidad permitirá mantener actualizada la información de las entradas ofrecidas en el festival.
+
 
 # Criterios de aceptación
 
