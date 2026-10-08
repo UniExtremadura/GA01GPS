@@ -21,6 +21,16 @@ Esta épica incluye:
 
 No incluye pagos económicos reales, operaciones bancarias ni integración con plataformas comerciales externas.
 
+
+# Versión de referencia 
+
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica 
+
+Permitir a los usuarios consultar los productos de merchandising disponibles en Subsonic Festival, conocer sus características y realizar adquisiciones simuladas. Además, los administradores podrán gestionar los productos, modificar su información y controlar su disponibilidad para mantener actualizado el catálogo de merchandising del festival.
+
+
 # Historias de usuario
 
 ## US-017 — CONSULTA DE PRODUCTOS DE MERCHANDISING
@@ -39,6 +49,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario de Subsonic Festival, quiero consultar los productos de merchandising disponibles para conocer los artículos ofrecidos y su información.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Could.
+- Estimación: 5 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste en mostrar los productos de merchandising disponibles, incluyendo información como su nombre, descripción, precio y disponibilidad. Se trata de una operación de consulta con un comportamiento bien delimitado, aunque será necesario comprobar que los datos mostrados sean correctos y estén actualizados.
+- Predecesores: Ninguno.
+- Plan inicial: Se propone desarrollar en una fase posterior a las funcionalidades principales del festival, ya que el merchandising tiene una prioridad menor. Su implementación permitirá que los usuarios consulten los productos antes de realizar una adquisición simulada.
+
 
 # Criterios de aceptación
 
@@ -93,6 +114,17 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 Como usuario registrado, quiero realizar una adquisición simulada de productos de merchandising para poder utilizar esta funcionalidad dentro de Subsonic Festival.
 
 Como administrador, quiero gestionar los productos de merchandising para mantener actualizado el catálogo disponible en la plataforma.
+
+
+# Información de planificación
+
+- Prioridad MoSCoW: Could.
+- Estimación: 10 horas-persona.
+- Incertidumbre: Alta.
+- Justificación de la incertidumbre: La funcionalidad incluye tanto la adquisición simulada de productos como su gestión administrativa. Es necesario comprobar la disponibilidad de los productos, registrar correctamente las adquisiciones, asociarlas a los usuarios y controlar los permisos de administración. También deben contemplarse posibles errores durante las operaciones y cambios en la disponibilidad de los productos.
+- Predecesores: US-002 y US-017.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación y la consulta de merchandising. Al tratarse de una funcionalidad con prioridad Could, su incorporación dependerá de la capacidad efectiva del equipo y del avance de los requisitos considerados más importantes.
+
 
 # Criterios de aceptación
 
