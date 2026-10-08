@@ -24,7 +24,13 @@ Esta épica incluye:
 
 No incluye sistemas de autenticación mediante plataformas externas ni el uso de datos personales reales.
 
+# Versión de referencia
 
+Catálogo de requisitos V0 — Práctica 1, Semana 2.
+
+# Resultado esperado de la épica 
+
+ El resultado esperado sería disponer de un sistema de autenticación y gestión de usuarios que permita registrar cuentas, iniciar y cerrar sesión, consultar y modificar perfiles y administrar usuarios según los permisos correspondientes.
 
 # Historias de usuario
 
@@ -44,6 +50,16 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como asistente al festival, quiero registrarme en Subsonic Festival para disponer de una cuenta con la que acceder a las funcionalidades disponibles para usuarios registrados.
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 7 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: El registro requiere validar los datos introducidos, comprobar que no existan cuentas duplicadas y gestionar los posibles errores que puedan producirse durante el proceso.
+- Predecesores: Ninguno.
+- Plan inicial: Se propone desarrollar al comienzo del proyecto, ya que el registro de usuarios es necesario para otras funcionalidades. La iteración concreta se determinará según la capacidad disponible del equipo.
+
 
 # Criterios de aceptación
 
@@ -115,6 +131,15 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como usuario registrado, quiero iniciar y cerrar sesión en Subsonic Festival para acceder de forma controlada a las funcionalidades correspondientes a mi rol.
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 8 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: Es necesario implementar la autenticación, gestionar correctamente las sesiones y controlar el acceso a las funcionalidades según los permisos de cada usuario.
+- Predecesores: US-001.
+- Plan inicial: Se propone desarrollar después del registro de usuarios, puesto que es necesario disponer de cuentas para comprobar el funcionamiento de la autenticación.
 
 # Criterios de aceptación
 
@@ -192,6 +217,15 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 
 Como usuario registrado, quiero consultar y modificar los datos permitidos de mi perfil para mantener actualizada la información asociada a mi cuenta.
 
+# Información de planificación
+
+- Prioridad MoSCoW: Should.
+- Estimación: 5 horas-persona.
+- Incertidumbre: Baja.
+- Justificación de la incertidumbre: La funcionalidad consiste principalmente en consultar y modificar información ya asociada a una cuenta de usuario. Su comportamiento es relativamente sencillo y sus requisitos están bien delimitados.
+- Predecesores: US-002.
+- Plan inicial: Se propone desarrollar una vez que el inicio de sesión esté disponible, ya que el usuario debe estar autenticado para consultar y modificar su perfil.
+
 # Criterios de aceptación
 
  US-003-AC-01: El usuario autenticado puede consultar la información disponible en su perfil.
@@ -243,6 +277,15 @@ Este requisito contribuye a los siguientes objetivos del proyecto:
 # Historia de usuario
 
 Como administrador, quiero consultar y gestionar los usuarios registrados en Subsonic Festival para mantener controladas las cuentas utilizadas en la plataforma.
+
+# Información de planificación
+
+- Prioridad MoSCoW: Must.
+- Estimación: 8 horas-persona.
+- Incertidumbre: Media.
+- Justificación de la incertidumbre: Es necesario implementar las operaciones de administración de usuarios y controlar que únicamente los administradores puedan realizarlas, evitando accesos no autorizados.
+- Predecesores: US-002.
+- Plan inicial: Se propone desarrollar después de implementar la autenticación y el control de acceso, ya que las operaciones de administración requieren identificar correctamente a los usuarios con permisos.
 
 # Criterios de aceptación
 
