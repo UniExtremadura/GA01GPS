@@ -1,6 +1,6 @@
 # Definition of Ready (DoR) — Subsonic Festival 2026
 
-**Equipo:** GPS01-2026 · **Versión:** 0.1 (borrador) · **Ubicación:** `docs/quality/definition-of-ready.md`
+**Equipo:** GPS01-2026 · **Versión:** 0.1 (borrador) ·
 
 Responde a la pregunta: **¿tenemos información suficiente para aceptar esta historia como candidata a entrar en una iteración?**
 No significa que sepamos todo, sino lo bastante para asumir el trabajo de forma razonable.
