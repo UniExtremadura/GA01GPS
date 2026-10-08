@@ -5,7 +5,7 @@
 Responde a la pregunta: **¿tenemos información suficiente para aceptar esta historia como candidata a entrar en una iteración?**
 No significa que sepamos todo, sino lo bastante para asumir el trabajo de forma razonable.
 
-Una historia de usuario solo entra en el Sprint Planning si cumple **todas** las condiciones aplicables. El Product Owner la propone y el equipo confirma que está lista (constitución, puerta de entrada a sprint).
+Una historia de usuario solo puede seleccionarse para un Sprint durante el Sprint Planning si cumple **todas** las condiciones aplicables. El Product Owner la propone y el equipo confirma que está lista (constitución, puerta de entrada a sprint).
 
 ## Identificación y trazabilidad
 - [ ] Tiene un identificador único y estable (`US-XXX`) y está asociada a una épica (`EP-XXX`).
@@ -42,7 +42,17 @@ Una historia de usuario solo entra en el Sprint Planning si cumple **todas** las
 - [ ] Cualquier supuesto importante o cuestión no bloqueante está documentada explícitamente.
 
 ## Excepciones
-Si el equipo acuerda aceptar una historia que no cumple alguna condición, debe quedar registrado en la Wiki: qué condición falta, quién lo decide (Product Owner) y cuándo se resolverá.
+## Excepciones
+
+Si excepcionalmente se propone aceptar una historia que no cumple alguna
+condición del Definition of Ready, la decisión deberá ser acordada por el
+equipo y registrada en la Wiki, indicando:
+
+- La condición que no se cumple.
+- La justificación de la excepción.
+- El riesgo que supone.
+- La persona responsable de resolverla.
+- Cuándo deberá quedar resuelta.
 
 ## Historial de versiones
 
