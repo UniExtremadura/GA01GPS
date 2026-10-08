@@ -32,14 +32,14 @@ Una historia no puede considerarse terminada si algún criterio de aceptación o
 ## Pruebas
 
 - [ ] Existen pruebas (automáticas o manuales documentadas) que cubren cada criterio de aceptación.
-- [ ] Las pruebas cubren el comportamiento principal y, al menos, un error o caso límite relevante.
+- [ ] Las pruebas cubren el comportamiento principal y los casos de error o situaciones excepcionales relevantes definidos para la historia.
 - [ ] Todas las pruebas existentes siguen pasando y no se han introducido regresiones críticas.
 - [ ] Las pruebas repetitivas se automatizan siempre que sea razonable.
 
 ## Integración y ejecución
 
-- [ ] El cambio se ha integrado mediante una Pull Request desde la rama `feature/US-XXX`, sin conflictos pendientes.
-- [ ] El pipeline de integración está en verde.
+- [ ] El cambio se ha integrado mediante una Pull Request desde una rama de trabajo identificada con el código de la historia (`US-XXX`), sin conflictos pendientes.
+- [ ] Las comprobaciones de integración y ejecución definidas por el equipo se han superado. Si existe un pipeline de integración continua, este debe finalizar correctamente.
 - [ ] El proyecto se inicia correctamente desde la versión integrada, y la funcionalidad se puede demostrar desde ella.
 - [ ] No hay pasos manuales sin documentar y las dependencias nuevas están declaradas.
 - [ ] El cambio no rompe funcionalidades principales que ya estaban operativas.
@@ -52,7 +52,7 @@ Cuando la historia los afecte (si aplica), se han comprobado y se deja constanci
 
 **Seguridad y datos**
 - [ ] Las entradas del usuario se validan.
-- [ ] Se comprueban los permisos del rol (cliente, proveedor, administrador): un usuario sin autorización no puede realizar operaciones restringidas.
+- [ ] Se comprueban los permisos de los roles definidos para Subsonic Festival (asistente al festival, proveedor y administrador), garantizando que un usuario sin autorización no pueda realizar operaciones restringidas.
 - [ ] No hay contraseñas, claves, tokens ni archivos `.env` reales en el código ni en el repositorio.
 - [ ] Los datos de desarrollo y pruebas son ficticios. No hay datos personales, bancarios ni sensibles reales.
 
@@ -86,7 +86,8 @@ Cadena de trazabilidad: **Misión → Objetivos → Épicas → Historias → Ta
 
 - [ ] La PR ha sido aprobada por **al menos una persona distinta del autor**.
 - [ ] Se han resuelto los problemas bloqueantes detectados en la revisión.
-- [ ] El Product Owner ha aceptado la historia, normalmente en la Sprint Review, tras comprobar el valor aportado y los criterios de aceptación.
+- [ ] La historia cumple todas las condiciones aplicables del Definition of Done y ha superado la revisión técnica.
+       El Product Owner comprueba el cumplimiento de los criterios de aceptación y registra su aceptación de la historia.
 
 ---
 
