@@ -1,0 +1,21 @@
+﻿Historia;Requisito;Iteración;Horas requisito;IT-001;IT-002;IT-003;IT-004;IT-005;IT-006
+US-001;Registro de usuario;IT-001;6;;;;;;
+US-002;Inicio y cierre de sesión;IT-002;7;;;;;;
+US-003;Consulta y modificación del perfil;IT-003;4;;;;;;
+US-004;Gestión de usuarios por administrador;IT-006;7;;;;;;
+US-005;Consulta de entradas disponibles;IT-002;4;;;;;;
+US-006;Adquisición simulada de entradas;IT-004;8;;;;;;
+US-007;Consulta de entradas adquiridas;IT-005;4;;;;;;
+US-008;Gestión de entradas por administrador;IT-003;7;;;;;;
+US-009;Consulta y filtrado de espacios disponibles;IT-001;5;;;;;;
+US-010;Reserva de un espacio;IT-005;8;;;;;;
+US-011;Gestión de espacios;IT-006;7;;;;;;
+US-012;Consulta de servicios;IT-002;4;;;;;;
+US-013;Adquisición de un servicio;IT-003;7;;;;;;
+US-014;Gestión de servicios;IT-006;7;;;;;;
+US-015;Consulta de información de proveedores;IT-001;4;;;;;;
+US-016;Gestión de proveedores;IT-005;6;;;;;;
+US-017;Consulta de productos de merchandising;IT-004;4;;;;;;
+US-018;Adquisición simulada y gestión de merchandising;IT-005;8;;;;;;
+US-019;Registro y gestión de incidencias;IT-004;8;;;;;;
+TOTAL;;;115;;;;;;
