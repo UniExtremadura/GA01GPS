@@ -21,7 +21,7 @@ El coste estimado del trabajo asignado a los requisitos es de 3.795 €, calcula
 ## Documentación
 
 - [**Wiki del proyecto**](https://github.com/UniExtremadura/GA01GPS/wiki): información del proyecto, equipo, alcance, objetivos, requisitos, decisiones y revisiones realizadas con IA.
-- [**Planificación**](https://github.com/UniExtremadura/GA01GPS/tree/main/organization/planning): archivos Excel con las estimaciones, el reparto de horas, las iteraciones y las dependencias, junto con la documentación y los proyectos de ProjectLibre.
+- [**Planificación**](https://github.com/UniExtremadura/GA01GPS/docs/organization/Planning): archivos Excel con las estimaciones, el reparto de horas, las iteraciones y las dependencias, junto con la documentación y los proyectos de ProjectLibre.
 - **Agentes de IA:** configuraciones de los agentes utilizados para apoyar la revisión de requisitos y planificación, disponibles en `.github/agents`.
 - **Especificaciones:** historias de usuario organizadas por épicas en `docs/specs/`.
 
