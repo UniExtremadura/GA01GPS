@@ -7,9 +7,11 @@ El proyecto consiste en la planificación de un sistema de gestión para Subsoni
 
 ## Organización del proyecto
 
-Para realizar la planificación hemos definido 19 historias de usuario agrupadas en 7 épicas. También hemos establecido las prioridades, estimaciones, dependencias y responsables de cada tarea.
+Para realizar la planificación hemos definido 19 historias de usuario agrupadas en 7 épicas. También hemos establecido sus prioridades, estimaciones, dependencias y responsables.
 
-La planificación inicial se ha organizado en cuatro sprints de una semana, teniendo en cuenta la capacidad estimada del equipo.
+La planificación vigente se organiza en seis iteraciones semanales, agrupadas en tres releases de dos semanas. La capacidad declarada es de 6,25 h por persona y semana, con la gestión incluida: 187,5 h nominales para el equipo durante las seis semanas.
+
+El plan compromete 115 h-persona: 100 h de ejecución y 15 h de gestión. El coste calculado a partir de las horas asignadas y las tarifas definidas es de 3.795 €.
 
 ## Documentación
 
@@ -19,5 +21,5 @@ La planificación inicial se ha organizado en cuatro sprints de una semana, teni
 
 ## Estado del proyecto
 
-Actualmente el proyecto se encuentra en la fase de planificación. Se han definido los requisitos y se ha preparado una propuesta inicial de organización del trabajo.
+Actualmente el proyecto se encuentra en fase de planificación. Se han definido los requisitos y se mantiene una planificación de seis iteraciones pendiente de sincronizar completamente con la Wiki, las especificaciones y los proyectos de ProjectLibre.
 
