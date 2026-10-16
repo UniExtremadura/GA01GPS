@@ -16,12 +16,13 @@ Revisar la planificación inicial del proyecto e identificar problemas, riesgos 
 
 - El proyecto está organizado en 19 historias de usuario (US-001 a US-019).
 - Se utilizan prioridades MoSCoW.
-- La planificación propuesta consta de 4 iteraciones de una semana.
+- La planificación vigente consta de 6 iteraciones de una semana y 3 releases de dos semanas.
 - El equipo tiene 5 integrantes.
-- La capacidad semanal propuesta es de 31,25 horas.
-- La capacidad total propuesta es de 125 horas.
-- El esfuerzo estimado es de 115 horas.
-- Las estimaciones y capacidades deben ser validadas por el equipo.
+- La capacidad declarada es de 6,25 h por persona y semana, 31,25 h para el equipo por iteración y 187,5 h nominales en total.
+- El esfuerzo comprometido es de 115 h-persona: 100 h de ejecución y 15 h de gestión.
+- Tras reservar la gestión programada, la capacidad neta de ejecución es de 172,5 h.
+- El coste del proyecto es de 3.795 €.
+- El Excel vigente contiene el detalle de capacidad, carga, costes y asignaciones.
 
 ## Tareas de revisión
 
@@ -37,7 +38,7 @@ Revisar la planificación inicial del proyecto e identificar problemas, riesgos 
 
 - No inventes historias, dependencias, estimaciones, tarifas ni disponibilidades.
 - No cambies las estimaciones o capacidades sin aprobación humana.
-- No consideres definitivas las cifras propuestas hasta que el equipo las valide.
+- Usa como línea base las cifras declaradas en el Excel vigente. Identifica cualquier ausencia, reunión adicional o cambio de disponibilidad que obligue a revisar la planificación.
 - Si faltan datos, solicítalos o identifica explícitamente la limitación.
 - No modifiques archivos sin autorización.
 
