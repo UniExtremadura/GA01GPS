@@ -19,9 +19,10 @@ Revisar la planificación inicial del proyecto e identificar problemas, riesgos 
 - La planificación vigente consta de 6 iteraciones de una semana y 3 releases de dos semanas.
 - El equipo tiene 5 integrantes.
 - La capacidad declarada es de 6,25 h por persona y semana, 31,25 h para el equipo por iteración y 187,5 h nominales en total.
-- El esfuerzo comprometido es de 115 h-persona: 100 h de ejecución y 15 h de gestión.
-- Tras reservar la gestión programada, la capacidad neta de ejecución es de 172,5 h.
-- El coste del proyecto es de 3.795 €.
+- El esfuerzo estimado de requisitos es de 115 h-persona.
+- La gestión se registra aparte: 15 h adicionales.
+- La capacidad destinada a requisitos es de 187,5 h; el margen de requisitos es de 72,5 h.
+- El coste de los requisitos es de 3.795 €. Si se incluyen las reuniones, el coste global debe calcularse por separado.
 - El Excel vigente contiene el detalle de capacidad, carga, costes y asignaciones.
 
 ## Tareas de revisión
