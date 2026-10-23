@@ -53,7 +53,7 @@ Como usuario de Subsonic Festival, quiero consultar la información disponible d
 # Información de planificación
 
 - Prioridad MoSCoW: Should.
-- Estimación: 5 horas-persona.
+- Estimación: 4 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste en consultar y mostrar la información de los proveedores registrados en el sistema. Se trata de una operación de consulta con un comportamiento bien delimitado, aunque será necesario comprobar que los datos mostrados sean correctos y estén actualizados.
 - Predecesores: Ninguno.
@@ -115,7 +115,7 @@ Como administrador, quiero gestionar los proveedores de Subsonic Festival para m
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 7 horas-persona.
+- Estimación: 6 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para registrar, modificar y eliminar o deshabilitar proveedores, validar los datos introducidos y controlar que únicamente los usuarios con permisos de administración puedan realizar estas acciones. También será necesario mantener la coherencia de la información almacenada.
 - Predecesores: US-002 y US-015.
