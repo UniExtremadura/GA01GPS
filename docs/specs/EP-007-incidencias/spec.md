@@ -58,7 +58,7 @@ Como administrador, quiero consultar y gestionar las incidencias registradas par
 # Información de planificación
 
 - Prioridad MoSCoW: Should.
-- Estimación: 9 horas-persona.
+- Estimación: 8 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: La funcionalidad incluye tanto el registro de incidencias por parte de los usuarios como su gestión administrativa. Es necesario validar la información introducida, almacenar correctamente las incidencias, permitir la modificación de su estado y controlar que únicamente los administradores puedan realizar las operaciones de gestión. También deben contemplarse posibles errores durante el registro y la actualización de las incidencias.
 - Predecesores: US-002.
