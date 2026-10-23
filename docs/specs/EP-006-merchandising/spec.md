@@ -54,7 +54,7 @@ Como usuario de Subsonic Festival, quiero consultar los productos de merchandisi
 # Información de planificación
 
 - Prioridad MoSCoW: Could.
-- Estimación: 5 horas-persona.
+- Estimación: 4 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste en mostrar los productos de merchandising disponibles, incluyendo información como su nombre, descripción, precio y disponibilidad. Se trata de una operación de consulta con un comportamiento bien delimitado, aunque será necesario comprobar que los datos mostrados sean correctos y estén actualizados.
 - Predecesores: Ninguno.
@@ -119,7 +119,7 @@ Como administrador, quiero gestionar los productos de merchandising para mantene
 # Información de planificación
 
 - Prioridad MoSCoW: Could.
-- Estimación: 10 horas-persona.
+- Estimación: 8 horas-persona.
 - Incertidumbre: Alta.
 - Justificación de la incertidumbre: La funcionalidad incluye tanto la adquisición simulada de productos como su gestión administrativa. Es necesario comprobar la disponibilidad de los productos, registrar correctamente las adquisiciones, asociarlas a los usuarios y controlar los permisos de administración. También deben contemplarse posibles errores durante las operaciones y cambios en la disponibilidad de los productos.
 - Predecesores: US-002 y US-017.
