@@ -54,7 +54,7 @@ Como asistente al festival, quiero registrarme en Subsonic Festival para dispone
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 7 horas-persona.
+- Estimación: 6 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: El registro requiere validar los datos introducidos, comprobar que no existan cuentas duplicadas y gestionar los posibles errores que puedan producirse durante el proceso.
 - Predecesores: Ninguno.
@@ -220,7 +220,7 @@ Como usuario registrado, quiero consultar y modificar los datos permitidos de mi
 # Información de planificación
 
 - Prioridad MoSCoW: Should.
-- Estimación: 5 horas-persona.
+- Estimación: 4 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste principalmente en consultar y modificar información ya asociada a una cuenta de usuario. Su comportamiento es relativamente sencillo y sus requisitos están bien delimitados.
 - Predecesores: US-002.
@@ -281,7 +281,7 @@ Como administrador, quiero consultar y gestionar los usuarios registrados en Sub
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 8 horas-persona.
+- Estimación: 7 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: Es necesario implementar las operaciones de administración de usuarios y controlar que únicamente los administradores puedan realizarlas, evitando accesos no autorizados.
 - Predecesores: US-002.
