@@ -54,7 +54,7 @@ Como usuario de Subsonic Festival, quiero consultar los servicios disponibles pa
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 5 horas-persona.
+- Estimación: 4 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste en mostrar los servicios disponibles y sus principales características. Se trata de una operación de consulta relativamente sencilla, aunque será necesario comprobar que la información presentada sea correcta y esté actualizada.
 - Predecesores: Ninguno.
@@ -115,7 +115,7 @@ Como usuario registrado, quiero adquirir un servicio disponible en Subsonic Fest
 # Información de planificación
 
 - Prioridad MoSCoW: Should.
-- Estimación: 8 horas-persona.
+- Estimación: 7 horas-persona.
 - Incertidumbre: Alta.
 - Justificación de la incertidumbre: La adquisición requiere comprobar que el servicio esté disponible, registrar correctamente la operación y asociarla al usuario correspondiente. También deben contemplarse posibles errores durante el proceso, cancelaciones y cambios en la disponibilidad del servicio.
 - Predecesores: US-002 y US-012.
@@ -203,7 +203,7 @@ Como usuario autorizado, quiero gestionar los servicios de Subsonic Festival par
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 8 horas-persona.
+- Estimación: 7 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para crear, modificar y deshabilitar servicios, validar los datos introducidos y garantizar que únicamente los administradores puedan realizar estas acciones. También será necesario mantener actualizada la información y disponibilidad de los servicios.
 - Predecesores: US-002.
