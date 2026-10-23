@@ -56,7 +56,7 @@ Como asistente al festival, quiero consultar las entradas disponibles en Subsoni
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 5 horas-persona.
+- Estimación: 4 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste en mostrar los diferentes tipos de entradas disponibles, incluyendo su información principal, como el precio, las características y la disponibilidad. Es una operación de consulta con un comportamiento bien delimitado.
 - Predecesores: Ninguno.
@@ -115,7 +115,7 @@ Como asistente registrado, quiero adquirir de forma simulada una entrada disponi
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 9 horas-persona.
+- Estimación: 8 horas-persona.
 - Incertidumbre: Alta.
 - Justificación de la incertidumbre: La adquisición requiere comprobar la disponibilidad de las entradas, asociarlas correctamente al usuario y evitar registros inconsistentes. También deben contemplarse situaciones como la cancelación de la operación, los errores durante el proceso o la falta de disponibilidad.
 - Predecesores: US-002 y US-005.
@@ -204,7 +204,7 @@ Como asistente registrado, quiero consultar las entradas asociadas a mi cuenta p
 # Información de planificación
 
 - Prioridad MoSCoW: Should.
-- Estimación: 5 horas-persona.
+- Estimación: 4 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste en recuperar y mostrar las entradas que han sido adquiridas previamente por un usuario. La principal consideración es garantizar que cada usuario únicamente pueda consultar las entradas asociadas a su propia cuenta.
 - Predecesores: US-002 y US-006.
@@ -266,7 +266,7 @@ Como administrador, quiero gestionar las entradas de Subsonic Festival para mant
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 8 horas-persona.
+- Estimación: 7 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para crear, modificar y deshabilitar tipos de entradas, validar la información introducida y controlar que estas acciones únicamente puedan realizarlas usuarios con permisos de administración.
 - Predecesores: US-002.
