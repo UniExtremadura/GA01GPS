@@ -55,7 +55,7 @@ Como usuario de Subsonic Festival, quiero consultar y filtrar los espacios dispo
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 6 horas-persona.
+- Estimación: 5 horas-persona.
 - Incertidumbre: Baja.
 - Justificación de la incertidumbre: La funcionalidad consiste en mostrar los espacios disponibles y permitir su filtrado según determinados criterios. Se trata de operaciones de consulta cuyo comportamiento está bien delimitado, aunque será necesario definir los filtros y comprobar que los resultados mostrados sean correctos.
 - Predecesores: Ninguno.
@@ -117,7 +117,7 @@ Como usuario registrado, quiero reservar un espacio disponible en Subsonic Festi
 # Información de planificación
 
 - Prioridad MoSCoW: Should.
-- Estimación: 9 horas-persona.
+- Estimación: 8 horas-persona.
 - Incertidumbre: Alta.
 - Justificación de la incertidumbre: La reserva requiere comprobar la disponibilidad de los espacios, registrar correctamente la operación y evitar conflictos cuando varios usuarios intenten reservar un mismo espacio. También deben contemplarse situaciones como la cancelación de la operación, los errores durante el proceso o los cambios de disponibilidad.
 - Predecesores: US-002 y US-009.
@@ -206,7 +206,7 @@ Como usuario autorizado, quiero gestionar los espacios de Subsonic Festival para
 # Información de planificación
 
 - Prioridad MoSCoW: Must.
-- Estimación: 8 horas-persona.
+- Estimación: 7 horas-persona.
 - Incertidumbre: Media.
 - Justificación de la incertidumbre: La gestión administrativa requiere implementar operaciones para crear, modificar y deshabilitar espacios, validar los datos introducidos y garantizar que únicamente los usuarios con permisos de administración puedan realizar estas acciones. También será necesario mantener actualizada la información sobre las características y la disponibilidad de los espacios.
 - Predecesores: US-002.
