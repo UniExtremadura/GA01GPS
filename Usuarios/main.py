@@ -3,6 +3,7 @@ from datetime import datetime, date, timezone
 from typing import Literal
 import hashlib
 import hmac
+import re
 import secrets
 
 from fastapi import FastAPI, HTTPException
@@ -225,22 +226,24 @@ def buscar_usuario(idUsuario: int):
 
 
 def buscar_usuario_email(email: str):
+    email_normalizado = email.strip().casefold()
     for usuario in usuarios:
-        if usuario.email.lower() == email.lower():
+        if usuario.email.strip().casefold() == email_normalizado:
             return usuario
 
     return None
 
 
 def comprobar_email(email: str, excluir_id=None):
+    email_normalizado = email.strip().casefold()
     for usuario in usuarios:
         if (
-            usuario.email.lower() == email.lower()
+            usuario.email.strip().casefold() == email_normalizado
             and usuario.id != excluir_id
         ):
             raise HTTPException(
                 status_code=409,
-                detail="El correo electronico ya esta registrado"
+                detail="El correo electrónico ya está registrado."
             )
 
 
@@ -250,11 +253,19 @@ def comprobar_email(email: str, excluir_id=None):
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
+    faltan_campos = any(
+        error.get("type") == "missing"
+        for error in exc.errors()
+    )
     return JSONResponse(
         status_code=400,
         content={
             "codigo": 400,
-            "mensaje": "Datos o parametros no validos"
+            "mensaje": (
+                "Completa todos los campos obligatorios."
+                if faltan_campos
+                else "Revisa el formato de los datos introducidos."
+            )
         }
     )
 
@@ -309,8 +320,24 @@ def listar_usuarios(tipo: TipoUsuario | None = None):
 )
 def registrar_usuario(datos: RegistroUsuario):
 
+    nombre = datos.nombre.strip()
+    apellidos = datos.apellidos.strip()
+    email = datos.email.strip().casefold()
+
+    if not nombre or not apellidos or not email or not datos.password.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Completa todos los campos obligatorios."
+        )
+
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
+        raise HTTPException(
+            status_code=400,
+            detail="Introduce un correo electrónico válido."
+        )
+
     # Comprobar que el correo no existe
-    comprobar_email(datos.email)
+    comprobar_email(email)
 
     # Generar identificador
     nuevo_id = max(
@@ -319,9 +346,17 @@ def registrar_usuario(datos: RegistroUsuario):
     ) + 1
 
     # Crear usuario sin incluir contraseña
+    datos_usuario = datos.model_dump(exclude={"password"})
+    datos_usuario.update({
+        "nombre": nombre,
+        "apellidos": apellidos,
+        "email": email,
+        "telefono": datos.telefono.strip() if datos.telefono else None,
+    })
+
     nuevo_usuario = Usuario(
         id=nuevo_id,
-        **datos.model_dump(exclude={"password"}),
+        **datos_usuario,
         fechaRegistro=datetime.now(timezone.utc)
     )
 
