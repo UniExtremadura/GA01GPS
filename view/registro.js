@@ -25,6 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const formatoEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!formatoEmail.test(email)) {
+            mostrarError('Introduce un correo electrónico válido.');
+            document.getElementById('email').focus();
+            return;
+        }
+
         const solicitud = {
             nombre,
             apellidos,
