@@ -5,6 +5,9 @@ import hashlib
 import hmac
 import re
 import secrets
+import sqlite3
+
+from .almacenamiento import (cargar_registros, guardar_registro, actualizar_usuario, borrar_usuario)
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
@@ -169,6 +172,13 @@ metodos_pago = {
 # El usuario inicial Laura no tiene contraseña
 passwords = {}
 
+
+# Recuperar los usuarios guardados en anteriores ejecuciones.
+for datos_guardados, hash_guardado in cargar_registros():
+    usuario_guardado = Usuario.model_validate(datos_guardados)
+    if not any(u.id == usuario_guardado.id for u in usuarios):
+        usuarios.append(usuario_guardado)
+    passwords[usuario_guardado.id] = hash_guardado
 
 # Sesiones provisionales en memoria
 sesiones = {}
@@ -360,13 +370,16 @@ def registrar_usuario(datos: RegistroUsuario):
         fechaRegistro=datetime.now(timezone.utc)
     )
 
-    # Guardar usuario
-    usuarios.append(nuevo_usuario)
+    # Persistir usuario y hash antes de confirmar el registro.
+    # Si falla el guardado, no se agrega un usuario incompleto a memoria.
+    hash_nuevo = generar_hash(datos.password)
+    try:
+        guardar_registro(nuevo_usuario, hash_nuevo)
+    except sqlite3.IntegrityError:
+        raise HTTPException(status_code=409, detail="El correo electrónico ya está registrado.")
 
-    # Guardar hash de la contraseña
-    passwords[nuevo_id] = generar_hash(
-        datos.password
-    )
+    usuarios.append(nuevo_usuario)
+    passwords[nuevo_id] = hash_nuevo
 
     return nuevo_usuario
 
@@ -458,6 +471,11 @@ def modificar_usuario(
         excluir_id=idUsuario
     )
 
+    actualizado = usuario.model_copy(update=datos.model_dump())
+    try:
+        actualizar_usuario(actualizado)
+    except sqlite3.IntegrityError:
+        raise HTTPException(status_code=409, detail="El correo electrónico ya está registrado.")
     for campo, valor in datos.model_dump().items():
         setattr(usuario, campo, valor)
 
@@ -477,7 +495,8 @@ def eliminar_usuario(idUsuario: int):
 
     usuario = buscar_usuario(idUsuario)
 
-    # Eliminar usuario
+    # Eliminar el registro persistente antes de actualizar la memoria
+    borrar_usuario(idUsuario)
     usuarios.remove(usuario)
 
     # Eliminar metodos de pago
@@ -661,9 +680,10 @@ def actualizar_perfil(
 
     usuario = buscar_usuario(idUsuario)
 
-    for campo, valor in datos.model_dump(
-        exclude_unset=True
-    ).items():
+    cambios = datos.model_dump(exclude_unset=True)
+    actualizado = usuario.model_copy(update=cambios)
+    actualizar_usuario(actualizado)
+    for campo, valor in cambios.items():
         setattr(usuario, campo, valor)
 
     return usuario
@@ -685,6 +705,8 @@ def actualizar_foto(
 
     usuario = buscar_usuario(idUsuario)
 
+    actualizado = usuario.model_copy(update={"fotoPerfil": datos.url})
+    actualizar_usuario(actualizado)
     usuario.fotoPerfil = datos.url
 
     return usuario
@@ -706,6 +728,8 @@ def modificar_tipo_usuario(
 
     usuario = buscar_usuario(idUsuario)
 
+    actualizado = usuario.model_copy(update={"tipo": datos.tipo})
+    actualizar_usuario(actualizado)
     usuario.tipo = datos.tipo
 
     return usuario
