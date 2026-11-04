@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte e Incidencias | Subsonic Festival</title>
+    <!-- Usa vuestro CSS general -->
+    <link rel="stylesheet" href="style_2.css"> 
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">SUBSONIC<span>FEST</span></div>
+        <nav><a href="index.html">Volver al inicio</a></nav>
+    </header>
+
+    <main class="registro-page">
+        <article class="registro-card">
+            <span class="badge">SOPORTE TÉCNICO</span>
+            <h1>NUEVA <span class="gradient-text">INCIDENCIA</span></h1>
+            <p class="registro-intro">¿Has detectado algún problema en la plataforma? Descríbelo a continuación para que nuestro equipo técnico lo solucione.</p>
+            
+            <!-- US-019-AC-02: Formulario solicitando información -->
+            <form id="form-incidencia" class="registro-grid" onsubmit="enviarIncidencia(event)">
+                
+                <div class="campo-registro campo-completo">
+                    <label for="titulo">Asunto del problema <span>*</span></label>
+                    <input type="text" id="titulo" placeholder="Ej: No puedo descargar mi entrada" required minlength="5">
+                </div>
+
+                <div class="campo-registro campo-completo">
+                    <label for="descripcion">Descripción detallada <span>*</span></label>
+                    <textarea id="descripcion" rows="5" placeholder="Explica paso a paso lo que ha ocurrido..." required minlength="10" style="width: 100%; border-radius: 8px; padding: 10px; background: #14141c; color: white; border: 1px solid rgba(255,255,255,0.1);"></textarea>
+                </div>
+
+                <!-- Contenedor para AC-03, AC-08 y AC-09 (Feedback) -->
+                <div class="campo-completo registro-feedback" id="feedback-msj" style="display: none;"></div>
+
+                <div class="campo-completo">
+                    <button type="submit" class="btn btn-primary registro-submit" id="btn-enviar">
+                        Registrar Incidencia
+                    </button>
+                </div>
+            </form>
+        </article>
+    </main>
+
+    <script>
+        // Simulamos un usuario logueado (en el proyecto real se sacaría del localStorage)
+        const ID_USUARIO_ACTUAL = 1; 
+
+        async function enviarIncidencia(evento) {
+            evento.preventDefault();
+            
+            const titulo = document.getElementById("titulo").value;
+            const descripcion = document.getElementById("descripcion").value;
+            const feedback = document.getElementById("feedback-msj");
+            const btnEnviar = document.getElementById("btn-enviar");
+
+            // Estado de carga
+            feedback.style.display = "none";
+            btnEnviar.disabled = true;
+            btnEnviar.textContent = "Registrando...";
+
+            try {
+                // AC-01: Petición al backend (asegúrate de que el puerto coincida con tu uvicorn)
+                const respuesta = await fetch("http://127.0.0.1:8000/api/incidencias", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        idUsuario: ID_USUARIO_ACTUAL,
+                        titulo: titulo,
+                        descripcion: descripcion
+                    })
+                });
+
+                const datos = await respuesta.json();
+
+                if (respuesta.ok) {
+                    // AC-03 y AC-08: Éxito
+                    feedback.className = "campo-completo registro-feedback registro-exito";
+                    feedback.textContent = datos.mensaje + " (Ticket #" + datos.idIncidencia + ")";
+                    feedback.style.display = "block";
+                    document.getElementById("form-incidencia").reset(); // Limpiar formulario
+                } else {
+                    // AC-09: Error de validación del servidor
+                    feedback.className = "campo-completo registro-feedback registro-error";
+                    feedback.textContent = datos.detail || "Revisa los datos introducidos.";
+                    feedback.style.display = "block";
+                }
+            } catch (error) {
+                // AC-09: Error crítico (servidor caído)
+                feedback.className = "campo-completo registro-feedback registro-error";
+                feedback.textContent = "Error de conexión. La incidencia no pudo registrarse.";
+                feedback.style.display = "block";
+            } finally {
+                btnEnviar.disabled = false;
+                btnEnviar.textContent = "Registrar Incidencia";
+            }
+        }
+    </script>
+</body>
+</html>
