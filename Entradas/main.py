@@ -142,27 +142,28 @@ def comprobar_nombre(nombre: str, excluir_id: int | None = None):
 
 def consultar_usuarios(id_usuario: int, id_pago: int | None = None):
     try:
-        usuario = httpx.get(f"{URL_USUARIOS}/usuarios/{id_usuario}", timeout=5)
-        if usuario.status_code == 404:
-            raise HTTPException(404, "Usuario no encontrado")
-        if usuario.status_code != 200:
-            raise HTTPException(503, "No se puede consultar Usuarios")
-        if id_pago is not None:
-            respuesta = httpx.get(
-                f"{URL_USUARIOS}/usuarios/{id_usuario}/metodos-pago", timeout=5
-            )
-            if respuesta.status_code == 404:
+        if id_pago is None:
+            usuario = httpx.get(f"{URL_USUARIOS}/usuarios/{id_usuario}", timeout=5)
+            if usuario.status_code == 404:
                 raise HTTPException(404, "Usuario no encontrado")
-            if respuesta.status_code != 200:
-                raise HTTPException(503, "No se pueden consultar los metodos de pago")
-            metodos = respuesta.json()
-            if not isinstance(metodos, list):
-                raise ValueError("Respuesta de metodos de pago incorrecta")
-            if not any(m.get("id") == id_pago for m in metodos):
-                raise HTTPException(400, "El metodo de pago no pertenece al usuario")
+            if usuario.status_code != 200:
+                raise HTTPException(503, "No se puede consultar Usuarios")
+            return
+
+        respuesta = httpx.get(
+            f"{URL_USUARIOS}/usuarios/{id_usuario}/metodos-pago", timeout=5
+        )
+        if respuesta.status_code == 404:
+            raise HTTPException(404, "Usuario no encontrado")
+        if respuesta.status_code != 200:
+            raise HTTPException(503, "No se pueden consultar los metodos de pago")
+        metodos = respuesta.json()
+        if not isinstance(metodos, list):
+            raise ValueError("Respuesta de metodos de pago incorrecta")
+        if not any(m.get("id") == id_pago for m in metodos):
+            raise HTTPException(400, "El metodo de pago no pertenece al usuario")
     except (httpx.RequestError, ValueError, KeyError, TypeError, AttributeError):
         raise HTTPException(503, "Microservicio Usuarios no disponible")
-
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
