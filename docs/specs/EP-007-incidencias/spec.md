@@ -12,7 +12,7 @@ Permitir que los usuarios puedan comunicar incidencias relacionadas con Subsonic
  G-05 — Desarrollo organizado y trazable.
 
 # Alcance de la épica
-
+fh
 Esta épica incluye:
 
 - Registro de incidencias por parte de los usuarios.
