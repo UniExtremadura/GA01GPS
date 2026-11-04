@@ -4,7 +4,7 @@ from threading import Lock
 from fastapi import Depends, FastAPI, Header, HTTPException, Response, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from .catalogo import CategoriaProducto, PRODUCTOS_MOCK, ProductoMerchandising
 
@@ -24,20 +24,32 @@ _bloqueo = Lock()
 class ProductoDatos(BaseModel):
     """Datos editables de producto; el identificador lo gestiona el servicio."""
 
+    model_config = ConfigDict(extra="forbid")
+
     codigo: str = Field(min_length=3, max_length=20)
     nombre: str = Field(min_length=2, max_length=100)
     descripcion: str = Field(min_length=5, max_length=500)
     categoria: CategoriaProducto
-    precio: float = Field(ge=0)
+    precio: float = Field(ge=0, allow_inf_nan=False)
     stockDisponible: int = Field(ge=0)
     disponible: bool
     icono: str = Field(default="🎁", max_length=8)
 
-    @model_validator(mode="after")
-    def validar_disponibilidad(self):
-        if self.disponible and self.stockDisponible == 0:
-            raise ValueError("Un producto sin stock no puede figurar como disponible")
-        return self
+    @field_validator("disponible")
+    @classmethod
+    def validar_disponibilidad(cls, disponible, info):
+        if disponible and info.data.get("stockDisponible") == 0:
+            raise ValueError("No se puede marcar como disponible un producto sin stock.")
+        return disponible
+
+    @field_validator("codigo", "nombre", "descripcion", mode="before")
+    @classmethod
+    def normalizar_y_exigir_texto(cls, valor):
+        if isinstance(valor, str):
+            valor = valor.strip()
+            if not valor:
+                raise ValueError("Este campo es obligatorio y no puede estar vacío.")
+        return valor
 
 
 def exigir_administrador(x_user_role: str = Header(default="", alias="X-User-Role")):
@@ -51,9 +63,20 @@ def exigir_administrador(x_user_role: str = Header(default="", alias="X-User-Rol
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
+    errores = [
+        {
+            "campo": ".".join(str(parte) for parte in error.get("loc", ())[1:]) or "solicitud",
+            "mensaje": error.get("msg", "Valor no válido."),
+        }
+        for error in exc.errors()
+    ]
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
-        content={"codigo": 400, "mensaje": "Los datos del producto no son válidos."},
+        content={
+            "codigo": 400,
+            "mensaje": "Revisa los datos del producto y corrige los campos indicados.",
+            "errores": errores,
+        },
     )
 
 
@@ -140,3 +163,5 @@ def eliminar_producto(id_producto: int):
         producto = buscar_producto(id_producto)
         productos_db.remove(producto)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
