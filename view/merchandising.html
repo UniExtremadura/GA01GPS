@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090d">
+  <title>Merchandising | Subsonic Festival</title>
+  <link rel="stylesheet" href="merchandising.css">
+  <script src="merchandising.js" defer></script>
+</head>
+<body>
+  <header class="merch-header">
+    <a class="brand" href="index.html" aria-label="Subsonic Festival, inicio">SUBSONIC<span>FEST</span></a>
+    <nav aria-label="Navegación principal">
+      <a href="index.html">Inicio</a>
+      <a href="entradas.html">Entradas</a>
+      <a href="servicios.html">Servicios</a>
+      <a class="current" href="merchandising.html" aria-current="page">Merchandising</a>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">SUBSONIC FESTIVAL · TIENDA OFICIAL</p>
+      <h1 id="page-title">Recuerdos para <span>llevarte el festival</span></h1>
+      <p>Descubre los artículos disponibles y consulta sus detalles.</p>
+    </section>
+
+    <section class="catalog" aria-labelledby="catalog-title">
+      <div class="catalog-heading">
+        <div><p class="eyebrow">CATÁLOGO</p><h2 id="catalog-title">Productos disponibles</h2></div>
+        <label class="search-box"><span>Buscar producto</span><input id="product-search" type="search" placeholder="Nombre o descripción" autocomplete="off"></label>
+      </div>
+      <p id="catalog-status" class="status" role="status" aria-live="polite">Cargando productos…</p>
+      <div id="product-grid" class="product-grid" aria-label="Listado de productos"></div>
+    </section>
+  </main>
+
+  <dialog id="product-dialog" class="product-dialog" aria-labelledby="detail-name">
+    <button id="close-dialog" class="close-button" type="button" aria-label="Cerrar detalle">×</button>
+    <p class="eyebrow">DETALLE DEL PRODUCTO</p>
+    <h2 id="detail-name"></h2>
+    <p id="detail-description" class="detail-description"></p>
+    <p id="detail-price" class="detail-price"></p>
+    <p id="detail-availability" class="detail-availability"></p>
+  </dialog>
+  <footer>© 2026 Subsonic Festival</footer>
+</body>
+</html>
