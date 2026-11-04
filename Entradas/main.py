@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+from decimal import Decimal, ROUND_HALF_UP
 from threading import Lock
 from typing import Literal
 import os
@@ -34,7 +35,7 @@ EstadoIndividual = Literal["valida", "utilizada", "cancelada"]
 class TipoEntradaInput(BaseModel):
     nombre: TipoNombre
     descripcion: str = ""
-    precio: float = Field(ge=0)
+    precio: float = Field(ge=0, allow_inf_nan=False)
     stockTotal: int = Field(ge=1)
     fechaInicioValidez: date
     fechaFinValidez: date
@@ -53,10 +54,10 @@ class TipoEntrada(TipoEntradaInput):
 
 
 class CompraEntradaInput(BaseModel):
-    idUsuario: int = Field(gt=0)
-    idTipoEntrada: int = Field(gt=0)
-    cantidad: int = Field(ge=1)
-    idMetodoPago: int = Field(gt=0)
+    idUsuario: int = Field(gt=0, strict=True)
+    idTipoEntrada: int = Field(gt=0, strict=True)
+    cantidad: int = Field(ge=1, strict=True)
+    idMetodoPago: int = Field(gt=0, strict=True)
 
 
 class CompraEntrada(BaseModel):
@@ -142,32 +143,36 @@ def comprobar_nombre(nombre: str, excluir_id: int | None = None):
 
 def consultar_usuarios(id_usuario: int, id_pago: int | None = None):
     try:
-        usuario = httpx.get(f"{URL_USUARIOS}/usuarios/{id_usuario}", timeout=5)
-        if usuario.status_code == 404:
-            raise HTTPException(404, "Usuario no encontrado")
-        if usuario.status_code != 200:
-            raise HTTPException(503, "No se puede consultar Usuarios")
-        if id_pago is not None:
-            respuesta = httpx.get(
-                f"{URL_USUARIOS}/usuarios/{id_usuario}/metodos-pago", timeout=5
-            )
-            if respuesta.status_code == 404:
+        if id_pago is None:
+            usuario = httpx.get(f"{URL_USUARIOS}/usuarios/{id_usuario}", timeout=5)
+            if usuario.status_code == 404:
                 raise HTTPException(404, "Usuario no encontrado")
-            if respuesta.status_code != 200:
-                raise HTTPException(503, "No se pueden consultar los metodos de pago")
-            metodos = respuesta.json()
-            if not isinstance(metodos, list):
-                raise ValueError("Respuesta de metodos de pago incorrecta")
-            if not any(m.get("id") == id_pago for m in metodos):
-                raise HTTPException(400, "El metodo de pago no pertenece al usuario")
+            if usuario.status_code != 200:
+                raise HTTPException(503, "No se puede consultar Usuarios")
+            return
+
+        respuesta = httpx.get(
+            f"{URL_USUARIOS}/usuarios/{id_usuario}/metodos-pago", timeout=5
+        )
+        if respuesta.status_code == 404:
+            raise HTTPException(404, "Usuario no encontrado")
+        if respuesta.status_code != 200:
+            raise HTTPException(503, "No se pueden consultar los metodos de pago")
+        metodos = respuesta.json()
+        if not isinstance(metodos, list):
+            raise ValueError("Respuesta de metodos de pago incorrecta")
+        if not any(m.get("id") == id_pago for m in metodos):
+            raise HTTPException(400, "El metodo de pago no pertenece al usuario")
     except (httpx.RequestError, ValueError, KeyError, TypeError, AttributeError):
         raise HTTPException(503, "Microservicio Usuarios no disponible")
-
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
     return JSONResponse(status_code=400, content={"codigo": 400, "mensaje": "Datos o parametros no validos"})
 
+
+@app.exception_handler(HTTPException)
+async def error_http(request, exc):
     return JSONResponse(status_code=exc.status_code, content={"codigo": exc.status_code, "mensaje": str(exc.detail)})
 
 
@@ -215,48 +220,66 @@ def obtener_por_tipo(tipo: TipoNombre):
 def comprar_entradas(datos: CompraEntradaInput):
     global contador_compras, contador_entradas
 
-    # Primero se valida la existencia del usuario y del metodo de pago.
+    # Comprobar la cuenta y la pertenencia del metodo de pago.
+    # Solo se consulta Usuarios: no se utiliza una pasarela ni se cobra dinero.
     consultar_usuarios(datos.idUsuario, datos.idMetodoPago)
 
+    # La comprobacion y el descuento de stock forman una unica operacion.
+    # El bloqueo evita sobreventas entre peticiones en este proceso.
     with bloqueo:
         tipo = buscar_tipo(datos.idTipoEntrada)
+        if tipo.estado != "disponible":
+            raise HTTPException(409, "El tipo de entrada no esta disponible")
+
         if tipo.stockDisponible < datos.cantidad:
             raise HTTPException(409, "No hay suficientes entradas disponibles")
 
+        # El precio procede del catalogo del servidor, nunca del cliente.
+        total = (Decimal(str(tipo.precio)) * datos.cantidad).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
         ahora = datetime.now(timezone.utc)
+
+        # Preparar los modelos antes de modificar los datos o contadores.
         compra = CompraEntrada(
             idCompra=contador_compras,
             idUsuario=datos.idUsuario,
             idTipoEntrada=tipo.id,
             tipoEntrada=tipo.nombre,
             cantidad=datos.cantidad,
-            precioTotal=round(tipo.precio * datos.cantidad, 2),
+            precioTotal=float(total),
             fechaCompra=ahora,
             estado="completada"
         )
-        contador_compras += 1
         nuevas = []
-        for _ in range(datos.cantidad):
-            ident = contador_entradas
-            contador_entradas += 1
+        for desplazamiento in range(datos.cantidad):
+            ident = contador_entradas + desplazamiento
             nuevas.append(EntradaUsuario(
                 idEntrada=ident,
                 idUsuario=datos.idUsuario,
                 idTipoEntrada=tipo.id,
                 tipoEntrada=tipo.nombre,
-                codigo=f"SUB-2027-{ident:06d}",
+                codigo=f"SUB-{tipo.fechaInicioValidez.year}-{ident:06d}",
                 fechaCompra=ahora,
                 fechaInicioValidez=tipo.fechaInicioValidez,
                 fechaFinValidez=tipo.fechaFinValidez,
                 estado="valida"
             ))
-            entrada_a_compra[ident] = compra.idCompra
 
+        asociaciones = {
+            entrada.idEntrada: compra.idCompra for entrada in nuevas
+        }
+        respuesta = compra.model_copy(deep=True)
+
+        # Confirmar la adquisicion y asociar cada entrada con su compra.
         compras.append(compra)
         entradas_usuarios.extend(nuevas)
+        entrada_a_compra.update(asociaciones)
         tipo.stockDisponible -= datos.cantidad
         tipo.estado = "disponible" if tipo.stockDisponible else "agotada"
-        return compra
+        contador_compras += 1
+        contador_entradas += datos.cantidad
+        return respuesta
 
 @app.get("/api/entradas/usuarios/{idUsuario}", response_model=list[EntradaUsuario])
 def entradas_de_usuario(idUsuario: int):
