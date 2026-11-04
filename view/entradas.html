@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#09090d">
+    <title>Entradas | Subsonic Festival 2026</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="navbar">
+        <a class="logo" href="index.html" aria-label="Subsonic Fest, inicio">SUBSONIC<span>FEST</span></a>
+        <nav aria-label="Navegación principal">
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="#entradas" class="active" aria-current="page">Entradas</a></li>
+                <li><a href="#" onclick="navegarA('escaleta')">Escaleta</a></li>
+                <li><a href="#" onclick="navegarA('tienda')">Tienda</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú" aria-expanded="false">
+            ☰
+        </button>
+    </header>
+
+    <main id="entradas" class="tickets-page">
+        <section class="tickets-hero">
+            <a class="back-link" href="index.html">&larr; Volver al inicio</a>
+            <span class="badge">EDICIÓN 2026 · 3 DÍAS</span>
+            <h1>Tu acceso a <span class="gradient-text">SUBSONIC</span></h1>
+            <p>Consulta los tipos de entradas, sus precios y la disponibilidad actual.</p>
+        </section>
+
+        <section class="tickets-section" aria-labelledby="ticket-options-title">
+            <div class="tickets-heading">
+                <div>
+                    <span class="eyebrow">ENTRADAS Y ABONOS</span>
+                    <h2 id="ticket-options-title">Encuentra tu pase</h2>
+                </div>
+                <p>Información actualizada desde la plataforma.</p>
+            </div>
+
+            <p id="tickets-status" class="tickets-message" role="status" aria-live="polite">Cargando entradas disponibles…</p>
+            <div id="ticket-grid" class="ticket-grid" aria-label="Entradas disponibles"></div>
+            <p id="tickets-error" class="tickets-message tickets-error" role="alert" hidden></p>
+        </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite">Redirigiendo...</div>
+
+    <footer>
+        <p>&copy; 2026 Subsonic Festival. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="app.js"></script>
+    <script src="entradas.js"></script>
+</body>
+</html>

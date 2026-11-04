@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subsonic Festival | Iniciar Sesión</title>
+    <!-- Vinculamos tu archivo CSS modificado -->
+    <link rel="stylesheet" href="style_2.css">
+</head>
+<body>
+
+    <!-- Barra de navegación básica -->
+    <header class="navbar">
+        <div class="logo">SUBSONIC<span>FEST</span></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="registro-page">
+        <article class="registro-card">
+            <span class="badge">ÁREA PRIVADA</span>
+            <h1>INICIAR <span class="gradient-text">SESIÓN</span></h1>
+            <p class="registro-intro">Accede a tu cuenta para gestionar tus entradas, pulsera cashless y preferencias del festival.</p>
+            
+            <!-- US-002-AC-01: Formulario de credenciales -->
+            <form id="login-form" class="registro-grid" onsubmit="procesarLogin(event)">
+                
+                <div class="campo-registro campo-completo">
+                    <label for="email">Correo electrónico <span>*</span></label>
+                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <div class="campo-registro campo-completo">
+                    <label for="password">Contraseña <span>*</span></label>
+                    <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
+                </div>
+
+                <!-- US-002-AC-03: Contenedor para mostrar el error -->
+                <div class="campo-completo registro-feedback registro-error" id="login-feedback" style="display: none;"></div>
+
+                <div class="campo-completo">
+                    <button type="submit" class="btn btn-primary registro-submit" id="btn-submit">
+                        Acceder al sistema
+                    </button>
+                </div>
+            </form>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Subsonic Festival. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        async function procesarLogin(evento) {
+            evento.preventDefault(); // Evita que la página recargue
+            
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const feedback = document.getElementById("login-feedback");
+            const btnSubmit = document.getElementById("btn-submit");
+
+            // Estado de carga
+            feedback.style.display = "none";
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = "Verificando...";
+
+            try {
+                // Llamada a la API de FastAPI que hemos creado
+                const respuesta = await fetch("http://127.0.0.1:8000/api/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: email, password: password })
+                });
+
+                const datos = await respuesta.json();
+
+                if (respuesta.ok) {
+                    // US-002-AC-02 y AC-04: Gestionar la autenticación
+                    // Guardamos los datos del usuario y su token en el almacenamiento del navegador
+                    localStorage.setItem("usuario_subsonic", JSON.stringify(datos));
+                    
+                    // Mostrar éxito visualmente
+                    feedback.className = "campo-completo registro-feedback registro-exito";
+                    feedback.textContent = `¡Bienvenido, ${datos.nombre}! Accediendo...`;
+                    feedback.style.display = "block";
+
+                    // Redirección según rol (AC-04: Acceso restringido)
+                    setTimeout(() => {
+                        if (datos.rol === "admin") {
+                            window.location.href = "admin-dashboard.html";
+                        } else {
+                            window.location.href = "perfil.html";
+                        }
+                    }, 1500);
+
+                } else {
+                    // US-002-AC-03: Credenciales incorrectas
+                    feedback.className = "campo-completo registro-feedback registro-error";
+                    feedback.textContent = datos.detail || "Error al iniciar sesión.";
+                    feedback.style.display = "block";
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = "Acceder al sistema";
+                }
+
+            } catch (error) {
+                feedback.className = "campo-completo registro-feedback registro-error";
+                feedback.textContent = "Error de conexión con el servidor.";
+                feedback.style.display = "block";
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = "Acceder al sistema";
+            }
+        }
+    </script>
+</body>
+</html>
