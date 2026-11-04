@@ -1,0 +1,11 @@
+/* US-017: estado de existencias sobre el diseño del catálogo existente. */
+.product-content p.availability { min-height: 0; margin-top: 14px; font-weight: 700; }
+.product-content p.availability.disponible, .detail-availability.disponible { color: var(--accent, #c7ff55); }
+.product-content p.availability.agotado, .detail-availability.agotado { color: #ffb3c7; }
+.product-content p.availability.no-disponible, .detail-availability.no-disponible,
+.product-content p.availability.sin-confirmar, .detail-availability.sin-confirmar { color: #f7d68a; }
+.product-card.agotado { border-style: dashed; }
+.product-card.agotado .product-art { opacity: .6; }
+.details-button:disabled { opacity: .6; cursor: wait; }
+.details-button:focus-visible, .close-button:focus-visible { outline: 3px solid var(--accent, #c7ff55); outline-offset: 4px; }
+#catalog-status + .details-button { margin-bottom: 20px; }

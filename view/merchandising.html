@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#09090d">
   <title>Merchandising | Subsonic Festival</title>
   <link rel="stylesheet" href="merchandising.css">
+  <link rel="stylesheet" href="disponibilidad.css">
   <script src="merchandising.js" defer></script>
 </head>
 <body>
@@ -28,7 +29,7 @@
 
     <section class="catalog" aria-labelledby="catalog-title">
       <div class="catalog-heading">
-        <div><p class="eyebrow">CATÁLOGO</p><h2 id="catalog-title">Productos disponibles</h2></div>
+        <div><p class="eyebrow">CATÁLOGO</p><h2 id="catalog-title">Productos de merchandising</h2></div>
         <label class="search-box"><span>Buscar producto</span><input id="product-search" type="search" placeholder="Nombre o descripción" autocomplete="off"></label>
       </div>
       <p id="catalog-status" class="status" role="status" aria-live="polite">Cargando productos…</p>
@@ -42,7 +43,7 @@
     <h2 id="detail-name"></h2>
     <p id="detail-description" class="detail-description"></p>
     <p id="detail-price" class="detail-price"></p>
-    <p id="detail-availability" class="detail-availability"></p>
+    <p id="detail-availability" class="detail-availability" role="status" aria-live="polite"></p>
   </dialog>
   <footer>© 2026 Subsonic Festival</footer>
 </body>
