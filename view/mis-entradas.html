@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mis entradas | Subsonic Festival</title>
+  <style>
+    body {font-family:Arial,sans-serif; background:#f5f6fa; margin:0; color:#202432}
+    main {max-width:950px; margin:45px auto; padding:0 20px}
+    h1 {margin-bottom:8px} .intro {color:#60677a}
+    .panel {background:white; border-radius:12px; padding:24px; box-shadow:0 3px 14px #0000000c}
+    .controls {display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px}
+    input {padding:10px; width:120px; border:1px solid #aab0bf; border-radius:6px}
+    button {padding:11px 18px; border:0; border-radius:6px; background:#262b69; color:white; cursor:pointer}
+    button:disabled {opacity:.6; cursor:wait}
+    table {border-collapse:collapse; width:100%} th,td {padding:14px; border-bottom:1px solid #e7e9ef; text-align:left}
+    th {background:#f2f3f8} .estado {font-weight:bold; border-radius:14px; padding:5px 10px; display:inline-block; background:#edf0f5}
+    .estado.valida {background:#e5f5e9; color:#21633a} .estado.cancelada {background:#fde9e9; color:#9d2626}
+    #mensaje {min-height:24px} .error {color:#a12222} .vacio {color:#555}
+    @media(max-width:600px) {th,td {padding:9px 5px; font-size:13px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Mis entradas adquiridas</h1>
+  <p class="intro">Consulta el tipo, la fecha de adquisición y el estado de tus entradas.</p>
+  <section class="panel">
+    <div class="controls">
+      <label for="usuarioId">ID de usuario (solo pruebas):</label>
+      <input id="usuarioId" type="number" min="1" step="1" value="2">
+      <button id="consultar" type="button">Consultar mis entradas</button>
+    </div>
+    <p id="mensaje" role="status" aria-live="polite"></p>
+    <div id="tablaContenedor" hidden>
+      <table>
+        <thead><tr><th>N.º entrada</th><th>Tipo</th><th>Fecha de adquisición</th><th>Estado</th></tr></thead>
+        <tbody id="filasEntradas"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script src="mis-entradas.js"></script>
+</body>
+</html>
