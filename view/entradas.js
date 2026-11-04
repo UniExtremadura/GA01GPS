@@ -1,4 +1,4 @@
-const API_ENTRADAS_DISPONIBLES = 'http://127.0.0.1:8000/api/entradas/disponibles';
+const API_ENTRADAS = 'http://127.0.0.1:8000/api/entradas';
 
 const NOMBRES_ENTRADA = {
     vip: 'Abono VIP',
@@ -6,82 +6,170 @@ const NOMBRES_ENTRADA = {
     abono_un_dia: 'Abono de un día'
 };
 
-const ICONOS_ENTRADA = {
-    vip: '✧',
-    abono_completo: '✦',
-    abono_un_dia: '◷'
-};
-
 function crearElemento(etiqueta, clase, texto) {
     const elemento = document.createElement(etiqueta);
+
     if (clase) elemento.className = clase;
     if (texto !== undefined) elemento.textContent = texto;
+
     return elemento;
+}
+
+function nombreEntrada(entrada) {
+    return NOMBRES_ENTRADA[entrada.nombre]
+        || entrada.nombre.replaceAll('_', ' ');
+}
+
+function formatoPrecio(precio) {
+    return new Intl.NumberFormat('es-ES', {
+        style: 'currency',
+        currency: 'EUR'
+    }).format(precio);
 }
 
 function formatoFecha(fecha) {
     if (!fecha) return 'No especificada';
+
     const valor = new Date(`${fecha}T00:00:00`);
+
     return Number.isNaN(valor.getTime())
         ? fecha
-        : new Intl.DateTimeFormat('es-ES', { dateStyle: 'medium' }).format(valor);
+        : new Intl.DateTimeFormat('es-ES', {
+            dateStyle: 'medium'
+        }).format(valor);
+}
+
+function estaDisponible(entrada) {
+    return entrada.estado === 'disponible'
+        && entrada.stockDisponible > 0;
+}
+
+async function consultarAPI(ruta) {
+    const controlador = new AbortController();
+    const tiempo = setTimeout(() => controlador.abort(), 10000);
+
+    try {
+        const respuesta = await fetch(`${API_ENTRADAS}${ruta}`, {
+            headers: { Accept: 'application/json' },
+            cache: 'no-store',
+            signal: controlador.signal
+        });
+
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+            throw new Error(
+                datos.mensaje
+                || datos.detail
+                || 'No se pudo consultar la información.'
+            );
+        }
+
+        return datos;
+    } finally {
+        clearTimeout(tiempo);
+    }
 }
 
 function crearTarjetaEntrada(entrada) {
-    const nombre = NOMBRES_ENTRADA[entrada.nombre] || entrada.nombre.replaceAll('_', ' ');
     const tarjeta = crearElemento('article', 'ticket-card');
-    tarjeta.setAttribute('aria-labelledby', `ticket-title-${entrada.id}`);
 
-    const lineaSuperior = crearElemento('div', 'ticket-topline');
-    lineaSuperior.append(
-        crearElemento('span', 'ticket-icon', ICONOS_ENTRADA[entrada.nombre] || '♫'),
-        crearElemento('span', 'ticket-type', nombre.toLocaleUpperCase('es-ES'))
-    );
-
-    const titulo = crearElemento('h3', '', nombre);
-    titulo.id = `ticket-title-${entrada.id}`;
-
+    const titulo = crearElemento('h3', '', nombreEntrada(entrada));
     const descripcion = crearElemento(
-        'p',
-        'ticket-description',
-        entrada.descripcion || 'Entrada disponible para el festival.'
+        'p', 'ticket-description', entrada.descripcion
     );
-
-    const precioTexto = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(entrada.precio);
-    const precio = crearElemento('div', 'ticket-price', precioTexto);
-    precio.appendChild(crearElemento('span', '', 'Precio por entrada'));
-
+    const precio = crearElemento(
+        'div', 'ticket-price', formatoPrecio(entrada.precio)
+    );
     const disponibilidad = crearElemento(
         'p',
         'ticket-stock',
-        `${entrada.stockDisponible} ${entrada.stockDisponible === 1 ? 'entrada disponible' : 'entradas disponibles'}`
+        `${entrada.stockDisponible} entradas disponibles`
     );
 
-    const detalleId = `ticket-details-${entrada.id}`;
     const detalles = crearElemento('div', 'ticket-details');
-    detalles.id = detalleId;
+    detalles.id = `detalle-entrada-${entrada.id}`;
     detalles.hidden = true;
-    detalles.append(
-        crearElemento('p', '', `Tipo: ${nombre}`),
-        crearElemento('p', '', `Precio: ${precioTexto}`),
-        crearElemento('p', '', `Disponibilidad: ${entrada.stockDisponible} entradas`),
-        crearElemento('p', '', `Válida desde: ${formatoFecha(entrada.fechaInicioValidez)}`),
-        crearElemento('p', '', `Válida hasta: ${formatoFecha(entrada.fechaFinValidez)}`),
-        crearElemento('p', '', `Estado: ${entrada.estado === 'disponible' ? 'Disponible' : entrada.estado}`)
-    );
+    detalles.setAttribute('role', 'status');
+    detalles.setAttribute('aria-live', 'polite');
 
-    const botonDetalle = crearElemento('button', 'btn ticket-button', 'Consultar detalles');
-    botonDetalle.type = 'button';
-    botonDetalle.setAttribute('aria-expanded', 'false');
-    botonDetalle.setAttribute('aria-controls', detalleId);
-    botonDetalle.addEventListener('click', () => {
-        const mostrar = detalles.hidden;
-        detalles.hidden = !mostrar;
-        botonDetalle.setAttribute('aria-expanded', String(mostrar));
-        botonDetalle.textContent = mostrar ? 'Ocultar detalles' : 'Consultar detalles';
+    const boton = crearElemento(
+        'button', 'btn ticket-button', 'Consultar detalles'
+    );
+    boton.type = 'button';
+    boton.setAttribute('aria-expanded', 'false');
+    boton.setAttribute('aria-controls', detalles.id);
+
+    let detalleAbierto = false;
+
+    boton.addEventListener('click', async () => {
+        if (detalleAbierto) {
+            detalles.hidden = true;
+            detalleAbierto = false;
+            boton.textContent = 'Consultar detalles';
+            boton.setAttribute('aria-expanded', 'false');
+            return;
+        }
+
+        boton.disabled = true;
+        boton.textContent = 'Consultando…';
+
+        try {
+            // Recuperar los datos actuales de la entrada seleccionada.
+            const actual = await consultarAPI(`/${entrada.id}`);
+
+            titulo.textContent = nombreEntrada(actual);
+            descripcion.textContent = actual.descripcion;
+            precio.textContent = formatoPrecio(actual.precio);
+            disponibilidad.textContent = estaDisponible(actual)
+                ? `${actual.stockDisponible} entradas disponibles`
+                : 'Entrada no disponible actualmente';
+
+            detalles.replaceChildren(
+                crearElemento('p', '', `Tipo: ${nombreEntrada(actual)}`),
+                crearElemento('p', '', `Descripción: ${actual.descripcion}`),
+                crearElemento('p', '', `Precio: ${formatoPrecio(actual.precio)}`),
+                crearElemento(
+                    'p', '',
+                    `Disponibilidad: ${actual.stockDisponible} entradas`
+                ),
+                crearElemento(
+                    'p', '',
+                    `Válida desde: ${formatoFecha(actual.fechaInicioValidez)}`
+                ),
+                crearElemento(
+                    'p', '',
+                    `Válida hasta: ${formatoFecha(actual.fechaFinValidez)}`
+                ),
+                crearElemento(
+                    'p', '',
+                    `Estado: ${estaDisponible(actual) ? 'Disponible' : 'No disponible'}`
+                )
+            );
+
+            detalleAbierto = true;
+            boton.textContent = 'Ocultar detalles';
+        } catch (error) {
+            detalles.replaceChildren(
+                crearElemento(
+                    'p',
+                    'tickets-error',
+                    'No se pudo consultar el detalle. Inténtalo de nuevo.'
+                )
+            );
+            boton.textContent = 'Reintentar detalle';
+        } finally {
+            detalles.hidden = false;
+            boton.setAttribute('aria-expanded', 'true');
+            boton.disabled = false;
+        }
     });
 
-    tarjeta.append(lineaSuperior, titulo, descripcion, precio, disponibilidad, detalles, botonDetalle);
+    tarjeta.append(
+        titulo, descripcion, precio,
+        disponibilidad, detalles, boton
+    );
+
     return tarjeta;
 }
 
@@ -90,32 +178,50 @@ async function cargarEntradasDisponibles() {
     const error = document.getElementById('tickets-error');
     const lista = document.getElementById('ticket-grid');
 
+    lista.replaceChildren();
+    lista.setAttribute('aria-busy', 'true');
+    estado.textContent = 'Cargando entradas disponibles…';
+    estado.hidden = false;
+    error.hidden = true;
+
     try {
-        const respuesta = await fetch(API_ENTRADAS_DISPONIBLES, {
-            headers: { Accept: 'application/json' }
-        });
-        if (!respuesta.ok) throw new Error(`El servidor respondió con estado ${respuesta.status}`);
+        const entradas = await consultarAPI('/disponibles');
 
-        const entradas = await respuesta.json();
-        if (!Array.isArray(entradas)) throw new Error('La respuesta del servidor no tiene el formato esperado.');
+        if (!Array.isArray(entradas)) {
+            throw new Error('Respuesta no válida');
+        }
 
-        lista.replaceChildren();
-        estado.hidden = true;
-        error.hidden = true;
+        const disponibles = entradas.filter(estaDisponible);
 
-        if (entradas.length === 0) {
-            estado.textContent = 'En este momento no hay entradas disponibles para el festival.';
-            estado.hidden = false;
+        if (disponibles.length === 0) {
+            estado.textContent =
+                'En este momento no hay entradas disponibles para el festival.';
             return;
         }
 
-        entradas.forEach((entrada) => lista.appendChild(crearTarjetaEntrada(entrada)));
+        disponibles.forEach(entrada => {
+            lista.appendChild(crearTarjetaEntrada(entrada));
+        });
+
+        estado.textContent =
+            `${disponibles.length} tipos de entrada disponibles.`;
     } catch (fallo) {
-        console.error('No se pudieron cargar las entradas disponibles:', fallo);
         estado.hidden = true;
-        error.textContent = 'No se han podido cargar las entradas. Comprueba que el servicio de entradas esté activo e inténtalo de nuevo.';
+        error.textContent =
+            'No se han podido cargar las entradas. Comprueba que el servicio está activo. ';
         error.hidden = false;
+
+        const reintentar = crearElemento(
+            'button', 'btn', 'Reintentar'
+        );
+        reintentar.type = 'button';
+        reintentar.addEventListener('click', cargarEntradasDisponibles);
+        error.appendChild(reintentar);
+    } finally {
+        lista.setAttribute('aria-busy', 'false');
     }
 }
 
-document.addEventListener('DOMContentLoaded', cargarEntradasDisponibles);
+document.addEventListener(
+    'DOMContentLoaded', cargarEntradasDisponibles
+);

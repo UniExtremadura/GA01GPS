@@ -166,9 +166,24 @@ def consultar_usuarios(id_usuario: int, id_pago: int | None = None):
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
-    return JSONResponse(status_code=400, content={"codigo": 400, "mensaje": "Datos o parametros no validos"})
+    return JSONResponse(
+        status_code=400,
+        content={
+            "codigo": 400,
+            "mensaje": "Datos o parametros no validos"
+        }
+    )
 
-    return JSONResponse(status_code=exc.status_code, content={"codigo": exc.status_code, "mensaje": str(exc.detail)})
+
+@app.exception_handler(HTTPException)
+async def error_http(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "codigo": exc.status_code,
+            "mensaje": str(exc.detail)
+        }
+    )
 
 
 @app.get("/")
@@ -197,9 +212,18 @@ def crear_tipo(datos: TipoEntradaInput):
 
 
 # IMPORTANTE: rutas especificas antes de /api/entradas/{idTipoEntrada}
-@app.get("/api/entradas/disponibles", response_model=list[TipoEntrada])
+@app.get(
+    "/api/entradas/disponibles",
+    response_model=list[TipoEntrada]
+)
 def listar_disponibles():
-    return [t for t in tipos_entrada if t.stockDisponible > 0]
+    with bloqueo:
+        return [
+            entrada.model_copy(deep=True)
+            for entrada in tipos_entrada
+            if entrada.estado == "disponible"
+            and entrada.stockDisponible > 0
+        ]
 
 
 @app.get("/api/entradas/tipo/{tipo}", response_model=TipoEntrada)
