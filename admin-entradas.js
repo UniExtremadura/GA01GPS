@@ -10,9 +10,14 @@
   const editor = $('#edit-section');
   let entradas = [];
 
+  function currentSession() {
+    try { return JSON.parse(localStorage.getItem('usuario_subsonic') || 'null'); }
+    catch { return null; }
+  }
+
   function hasAdminAccess() {
     try {
-      const session = JSON.parse(localStorage.getItem('usuario_subsonic') || 'null');
+      const session = currentSession();
       const role = String(session?.rol || session?.tipo || '').toLowerCase();
       return Boolean(session?.token) && ['admin', 'administrador'].includes(role);
     } catch { return false; }
@@ -32,11 +37,16 @@
   async function api(path = '', options = {}) {
     const response = await fetch(`${API}${path}`, {
       ...options,
-      headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...options.headers }
+      headers: { Accept: 'application/json', ...(options.body ? { 'Content-Type': 'application/json' } : {}),
+        ...(currentSession()?.token ? { Authorization: `Bearer ${currentSession().token}` } : {}), ...options.headers }
     });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      throw new Error(body.detail || body.mensaje || `Error del servidor (${response.status}).`);
+      if (response.status === 401 || response.status === 403) {
+        panel.hidden = true; $('#access-denied').hidden = false;
+      }
+      const detail = body.detail || body.mensaje;
+      throw new Error(typeof detail === 'string' ? detail : `Error del servidor (${response.status}).`);
     }
     return response.status === 204 ? null : response.json();
   }
@@ -84,8 +94,8 @@
   function validForm() {
     const price = Number($('#ticket-price').value);
     const stock = Number($('#ticket-stock').value);
-    if (!Number.isFinite(price) || price < 0) throw new Error('El precio debe ser un número igual o superior a cero.');
-    if (!Number.isInteger(stock) || stock < 1) throw new Error('El stock total debe ser un entero mayor que cero.');
+    if (!$('#ticket-price').value.trim() || !Number.isFinite(price) || price < 0) throw new Error('El precio debe ser un número igual o superior a cero.');
+    if (!$('#ticket-stock').value.trim() || !Number.isInteger(stock) || stock < 1) throw new Error('El stock total debe ser un entero mayor que cero.');
     if (!$('#ticket-start').value || !$('#ticket-end').value) throw new Error('Indica las fechas de validez.');
     if ($('#ticket-end').value < $('#ticket-start').value) throw new Error('La fecha final no puede ser anterior a la inicial.');
     return { nombre: $('#ticket-name').value, descripcion: $('#ticket-description').value.trim(), precio: price, stockTotal: stock,
