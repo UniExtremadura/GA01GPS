@@ -1,7 +1,9 @@
 """API de consulta y administración de espacios - Subsonic Festival."""
+import os
 from threading import Lock
 from typing import Literal
 
+import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
@@ -31,6 +33,7 @@ TipoEspacio = Literal["escenario", "camping", "zona_vip", "sala"]
 ZonaEspacio = Literal["Norte", "Sur", "Este", "Oeste"]
 _bloqueo = Lock()
 _siguiente_id = max((espacio["id"] for espacio in espacios), default=0) + 1
+URL_SESION = os.getenv("SUBSONIC_URL_SESION", "http://127.0.0.1:8000").rstrip("/")
 
 
 class EspacioDatos(BaseModel):
@@ -60,9 +63,23 @@ class Espacio(EspacioDatos):
     id: int = Field(gt=0)
 
 
-def verificar_administrador(x_user_role: str = Header(default="", alias="X-User-Role")):
-    """Restringe las operaciones de gestión al rol administrador."""
-    if x_user_role.strip().casefold() != "admin":
+def verificar_administrador(authorization: str | None = Header(default=None)):
+    """Comprueba el rol con el servicio de sesión."""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Inicia sesión para gestionar espacios.")
+    try:
+        respuesta = httpx.get(
+            f"{URL_SESION}/api/privado", headers={"Authorization": authorization}, timeout=4,
+        )
+        if respuesta.status_code == 401:
+            raise HTTPException(status_code=401, detail="Tu sesión no es válida. Inicia sesión de nuevo.")
+        respuesta.raise_for_status()
+        sesion = respuesta.json()
+        if not isinstance(sesion, dict) or not isinstance(sesion.get("rol"), str):
+            raise ValueError("Respuesta de sesión incompleta.")
+    except (httpx.HTTPError, ValueError) as error:
+        raise HTTPException(status_code=503, detail="No se pudo verificar la sesión.") from error
+    if sesion["rol"] != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Acceso denegado. Se requieren permisos de administrador.",
@@ -185,5 +202,19 @@ def modificar_espacio(idEspacio: int, datos: EspacioDatos):
         indice, existente = buscar_espacio_registrado(idEspacio)
         comprobar_nombre_unico(datos.nombre, excluir_id=idEspacio)
         actualizado = {"id": existente["id"], **datos.model_dump()}
+        espacios[indice] = actualizado
+        return actualizado.copy()
+
+
+@app.delete(
+    "/api/admin/espacios/{idEspacio}",
+    response_model=Espacio,
+    dependencies=[Depends(verificar_administrador)],
+)
+def deshabilitar_espacio(idEspacio: int):
+    """Da de baja el espacio conservando su identificador y sus datos."""
+    with _bloqueo:
+        indice, espacio = buscar_espacio_registrado(idEspacio)
+        actualizado = {**espacio, "habilitado": False, "disponible": False}
         espacios[indice] = actualizado
         return actualizado.copy()
