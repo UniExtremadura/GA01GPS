@@ -1,22 +1,19 @@
+"""API de consulta y administración de espacios - Subsonic Festival."""
+from threading import Lock
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from .catalogo import consultar_espacio, consultar_espacios
-
-
-# ==========================================
-# CONFIGURACION DE FASTAPI
-# ==========================================
+from .catalogo import consultar_espacio, consultar_espacios, espacios, normalizar
 
 app = FastAPI(
     title="API Espacios - Subsonic Festival",
-    description="Consulta y filtrado de espacios disponibles - US-009",
-    version="1.0.0"
+    description="Consulta y administración de espacios del festival.",
+    version="1.1.0",
 )
 
 app.add_middleware(
@@ -26,47 +23,93 @@ app.add_middleware(
         "http://localhost:5500", "http://127.0.0.1:5500",
     ],
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-# ==========================================
-# MODELOS DE DATOS
-# ==========================================
-
 TipoEspacio = Literal["escenario", "camping", "zona_vip", "sala"]
 ZonaEspacio = Literal["Norte", "Sur", "Este", "Oeste"]
+_bloqueo = Lock()
+_siguiente_id = max((espacio["id"] for espacio in espacios), default=0) + 1
 
 
-class Espacio(BaseModel):
-    id: int
-    nombre: str
+class EspacioDatos(BaseModel):
+    """Campos editables de un espacio; el identificador lo asigna la API."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    nombre: str = Field(min_length=2, max_length=100)
     tipo: TipoEspacio
     zona: ZonaEspacio
-    capacidad: int
-    descripcion: str
-    habilitado: bool
-    disponible: bool
+    capacidad: int = Field(gt=0)
+    descripcion: str = Field(min_length=5, max_length=500)
+    habilitado: bool = True
+    disponible: bool = True
+
+    @field_validator("nombre", "descripcion", mode="before")
+    @classmethod
+    def normalizar_texto(cls, valor):
+        if isinstance(valor, str):
+            valor = valor.strip()
+            if not valor:
+                raise ValueError("Este campo es obligatorio y no puede estar vacío.")
+        return valor
 
 
-# ==========================================
-# VALIDACION DE ERRORES
-# ==========================================
+class Espacio(EspacioDatos):
+    id: int = Field(gt=0)
+
+
+def verificar_administrador(x_user_role: str = Header(default="", alias="X-User-Role")):
+    """Restringe las operaciones de gestión al rol administrador."""
+    if x_user_role.strip().casefold() != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acceso denegado. Se requieren permisos de administrador.",
+        )
+
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
-    return JSONResponse(status_code=400, content={
-        "codigo": 400,
-        "mensaje": "Filtros no validos. Revisa el tipo, la zona y la capacidad minima."
-    })
+    errores = [
+        {
+            "campo": ".".join(str(parte) for parte in error.get("loc", ())[1:]) or "solicitud",
+            "mensaje": error.get("msg", "Valor no válido."),
+        }
+        for error in exc.errors()
+    ]
+    return JSONResponse(
+        status_code=400,
+        content={
+            "codigo": 400,
+            "mensaje": "Revisa los datos del espacio y corrige los campos indicados.",
+            "errores": errores,
+        },
+    )
 
 
 @app.exception_handler(HTTPException)
 async def error_http(request, exc):
-    return JSONResponse(status_code=exc.status_code, content={
-        "codigo": exc.status_code, "mensaje": exc.detail
-    })
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"codigo": exc.status_code, "mensaje": exc.detail},
+    )
+
+
+def buscar_espacio_registrado(id_espacio: int) -> tuple[int, dict]:
+    for indice, espacio in enumerate(espacios):
+        if espacio["id"] == id_espacio:
+            return indice, espacio
+    raise HTTPException(status_code=404, detail="Espacio no encontrado.")
+
+
+def comprobar_nombre_unico(nombre: str, excluir_id: int | None = None) -> None:
+    clave = normalizar(nombre)
+    if any(
+        normalizar(espacio["nombre"]) == clave and espacio["id"] != excluir_id
+        for espacio in espacios
+    ):
+        raise HTTPException(status_code=409, detail="Ya existe un espacio con ese nombre.")
 
 
 @app.get("/")
@@ -74,10 +117,7 @@ def inicio():
     return {"mensaje": "Microservicio Espacios funcionando"}
 
 
-# ==========================================
-# CONSULTA Y FILTRADO DE ESPACIOS
-# ==========================================
-
+# Consulta pública existente (US-009).
 @app.get("/api/espacios", response_model=list[Espacio])
 def listar_espacios(
     nombre: str = Query(default="", max_length=100),
@@ -94,3 +134,56 @@ def obtener_espacio(idEspacio: int):
     if espacio is None:
         raise HTTPException(status_code=404, detail="Espacio no encontrado o no disponible")
     return espacio
+
+
+# Gestión administrativa (US-011 / SCRUM-66).
+@app.get(
+    "/api/admin/espacios",
+    response_model=list[Espacio],
+    dependencies=[Depends(verificar_administrador)],
+)
+def listar_espacios_admin():
+    """Devuelve también espacios no disponibles para permitir su edición."""
+    with _bloqueo:
+        return [espacio.copy() for espacio in espacios]
+
+
+@app.get(
+    "/api/admin/espacios/{idEspacio}",
+    response_model=Espacio,
+    dependencies=[Depends(verificar_administrador)],
+)
+def obtener_espacio_admin(idEspacio: int):
+    with _bloqueo:
+        _, espacio = buscar_espacio_registrado(idEspacio)
+        return espacio.copy()
+
+
+@app.post(
+    "/api/admin/espacios",
+    response_model=Espacio,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(verificar_administrador)],
+)
+def crear_espacio(datos: EspacioDatos):
+    global _siguiente_id
+    with _bloqueo:
+        comprobar_nombre_unico(datos.nombre)
+        nuevo = {"id": _siguiente_id, **datos.model_dump()}
+        _siguiente_id += 1
+        espacios.append(nuevo)
+        return nuevo.copy()
+
+
+@app.put(
+    "/api/admin/espacios/{idEspacio}",
+    response_model=Espacio,
+    dependencies=[Depends(verificar_administrador)],
+)
+def modificar_espacio(idEspacio: int, datos: EspacioDatos):
+    with _bloqueo:
+        indice, existente = buscar_espacio_registrado(idEspacio)
+        comprobar_nombre_unico(datos.nombre, excluir_id=idEspacio)
+        actualizado = {"id": existente["id"], **datos.model_dump()}
+        espacios[indice] = actualizado
+        return actualizado.copy()
