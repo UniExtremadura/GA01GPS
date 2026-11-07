@@ -1,113 +1,155 @@
-// US-014 / SCRUM-69: formulario de alta de servicios.
-(() => {
+// US-014: administración del catálogo de servicios.
+(async () => {
   'use strict';
-  const API_BASE = 'http://127.0.0.1:8004/api/admin/servicios';
-  const form = document.querySelector('#service-form');
-  const feedback = document.querySelector('#feedback');
-  const rows = document.querySelector('#service-rows');
-  const listStatus = document.querySelector('#list-status');
-  const saveButton = document.querySelector('#save-button');
-  const fields = {
-    nombre: document.querySelector('#name'),
-    categoria: document.querySelector('#category'),
-    descripcion: document.querySelector('#description'),
-    precio: document.querySelector('#price'),
-  };
-  const errors = {
-    nombre: document.querySelector('#name-error'),
-    categoria: document.querySelector('#category-error'),
-    descripcion: document.querySelector('#description-error'),
-    precio: document.querySelector('#price-error'),
-  };
+  const api = 'http://127.0.0.1:8004/api/admin/servicios';
+  const $ = (selector) => document.querySelector(selector);
+  const form = $('#service-form');
+  const feedback = $('#feedback');
+  const rows = $('#service-rows');
+  const status = $('#list-status');
+  const save = $('#save-button');
+  const reload = $('#reload-button');
+  const cancel = $('#cancel-edit');
+  const title = $('#form-title');
+  const money = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' });
+  const field = (name) => form.elements.namedItem(name);
+  let editingId = null;
+  let busy = false;
 
-  function session() {
-    try { return JSON.parse(localStorage.getItem('usuario_subsonic') || 'null'); }
-    catch { return null; }
+  function message(text, error = false) {
+    feedback.textContent = text;
+    feedback.classList.toggle('error', error);
   }
-  const currentSession = session();
-  if (!currentSession?.token) window.location.replace('login.html');
-  else if (currentSession.rol !== 'admin') window.location.replace('perfil.html');
 
-  function headers() {
-    return { 'Content-Type': 'application/json', rol_usuario: currentSession?.rol || '' };
-  }
-  function showMessage(message, isError = false) {
-    feedback.textContent = message;
-    feedback.classList.toggle('error', isError);
-  }
-  function validate() {
-    let valid = true;
-    for (const [key, input] of Object.entries(fields)) {
-      errors[key].textContent = '';
-      input.removeAttribute('aria-invalid');
-      const value = input.value.trim();
-      if (!value) {
-        errors[key].textContent = 'Este campo es obligatorio.';
-        input.setAttribute('aria-invalid', 'true'); valid = false;
-      } else if (key === 'nombre' && value.length < 2) {
-        errors[key].textContent = 'Introduce al menos 2 caracteres.';
-        input.setAttribute('aria-invalid', 'true'); valid = false;
-      } else if (key === 'descripcion' && value.length < 5) {
-        errors[key].textContent = 'Introduce al menos 5 caracteres.';
-        input.setAttribute('aria-invalid', 'true'); valid = false;
-      } else if (key === 'precio' && (!Number.isFinite(Number(value)) || Number(value) < 0)) {
-        errors[key].textContent = 'Introduce un precio igual o superior a 0.';
-        input.setAttribute('aria-invalid', 'true'); valid = false;
-      }
-    }
-    return valid;
-  }
-  async function request(url, options = {}) {
-    const response = await fetch(url, { ...options, headers: headers() });
+  async function request(path = '', method = 'GET', data) {
+    const response = await fetch(api + path, {
+      method, cache: 'no-store', signal: AbortSignal.timeout(10000),
+      headers: {
+        Authorization: 'Bearer ' + (obtenerSesion()?.token || ''),
+        ...(data && { 'Content-Type': 'application/json' }),
+      },
+      body: data && JSON.stringify(data),
+    });
     const body = await response.json().catch(() => ({}));
+    if (response.status === 401) window.location.replace('login.html');
     if (!response.ok) {
-      const details = body.errores?.map((error) => `${error.campo}: ${error.mensaje}`).join(' · ');
-      throw new Error(details || body.detail || body.mensaje || `Error HTTP ${response.status}`);
+      const details = body.errores?.map((item) => item.campo + ': ' + item.mensaje).join(' · ');
+      throw new Error(details || body.detail || body.mensaje || 'No se pudo completar la operación.');
     }
     return body;
   }
-  function euro(value) {
-    return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(Number(value));
+
+  function node(tag, text) {
+    const element = document.createElement(tag);
+    element.textContent = text;
+    return element;
   }
-  async function loadServices() {
-    rows.replaceChildren(); listStatus.textContent = 'Cargando servicios…';
+
+  function resetForm() {
+    editingId = null;
+    form.reset();
+    title.textContent = save.textContent = 'Registrar servicio';
+    cancel.hidden = true;
+  }
+
+  async function act(operation) {
+    if (busy) return;
+    busy = save.disabled = reload.disabled = cancel.disabled = true;
     try {
-      const services = await request(API_BASE);
-      listStatus.textContent = services.length ? `${services.length} servicio(s) registrado(s).` : 'Todavía no hay servicios registrados.';
+      await operation();
+    } catch (error) {
+      message(error.message, true);
+    } finally {
+      busy = save.disabled = reload.disabled = cancel.disabled = false;
+    }
+  }
+
+  async function viewDetail(id) {
+    const service = await request('/' + id);
+    $('#detail-title').textContent = service.nombre;
+    const data = $('#detail-data');
+    data.replaceChildren();
+    for (const [key, value] of [
+      ['ID', service.id], ['Categoría', service.categoria], ['Descripción', service.descripcion],
+      ['Precio', money.format(service.precio)], ['Estado', service.disponible ? 'Disponible' : 'No disponible'],
+    ]) data.append(node('dt', key), node('dd', value));
+    $('#service-detail').showModal();
+  }
+
+  async function startEdit(id) {
+    const service = await request('/' + id);
+    editingId = id;
+    for (const key of ['nombre', 'categoria', 'descripcion', 'precio']) field(key).value = service[key];
+    field('disponible').checked = service.disponible;
+    title.textContent = 'Editar: ' + service.nombre;
+    save.textContent = 'Guardar cambios';
+    cancel.hidden = false;
+    message('');
+    field('nombre').focus();
+  }
+
+  async function disableService(service) {
+    if (!window.confirm('¿Dar de baja «' + service.nombre + '»? Dejará de ofrecerse en el catálogo público.')) return;
+    const updated = await request('/' + service.id, 'DELETE');
+    if (editingId === service.id) resetForm();
+    message('Servicio «' + updated.nombre + '» dado de baja.');
+    await loadServices();
+  }
+
+  function action(label, service, operation) {
+    const button = node('button', label);
+    button.type = 'button';
+    button.className = 'secondary';
+    button.setAttribute('aria-label', label + ': ' + service.nombre);
+    button.addEventListener('click', () => act(operation));
+    return button;
+  }
+
+  async function loadServices() {
+    rows.replaceChildren();
+    status.textContent = 'Cargando servicios…';
+    try {
+      const services = await request();
       for (const service of services) {
         const row = document.createElement('tr');
-        for (const value of [service.nombre, service.categoria, euro(service.precio)]) {
-          const cell = document.createElement('td'); cell.textContent = value; row.appendChild(cell);
-        }
-        const state = document.createElement('td');
-        state.textContent = service.disponible ? 'Disponible' : 'No disponible';
+        const state = node('td', service.disponible ? 'Disponible' : 'No disponible');
         state.className = service.disponible ? 'availability' : 'unavailable';
-        row.appendChild(state); rows.appendChild(row);
+        const actions = document.createElement('td');
+        actions.append(
+          action('Ver detalle', service, () => viewDetail(service.id)),
+          action('Editar', service, () => startEdit(service.id)),
+        );
+        if (service.disponible) actions.append(action('Dar de baja', service, () => disableService(service)));
+        row.append(node('td', service.nombre), node('td', service.categoria), node('td', money.format(service.precio)), state, actions);
+        rows.append(row);
       }
-    } catch (error) { listStatus.textContent = `No se pudo cargar el catálogo: ${error.message}`; }
+      status.textContent = services.length ? 'Servicios registrados: ' + services.length : 'No hay servicios registrados.';
+    } catch (error) {
+      status.textContent = 'No se pudo cargar el catálogo: ' + error.message;
+    }
   }
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault(); showMessage('');
-    if (!validate()) { showMessage('Revisa los campos marcados antes de guardar.', true); return; }
-    const payload = {
-      nombre: fields.nombre.value.trim(),
-      categoria: fields.categoria.value.trim(),
-      descripcion: fields.descripcion.value.trim(),
-      precio: Number(fields.precio.value),
-      disponible: document.querySelector('#available').checked,
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (busy) return;
+    const id = editingId;
+    const data = {
+      nombre: field('nombre').value.trim(),
+      categoria: field('categoria').value.trim(),
+      descripcion: field('descripcion').value.trim(),
+      precio: field('precio').valueAsNumber,
+      disponible: field('disponible').checked,
     };
-    saveButton.disabled = true; saveButton.textContent = 'Guardando…';
-    try {
-      const created = await request(API_BASE, { method: 'POST', body: JSON.stringify(payload) });
-      form.reset(); document.querySelector('#available').checked = true;
-      showMessage(`Servicio «${created.nombre}» registrado correctamente (ID ${created.id}).`);
+    act(async () => {
+      message('');
+      const service = await request(id === null ? '' : '/' + id, id === null ? 'POST' : 'PUT', data);
+      resetForm();
+      message('Servicio «' + service.nombre + '» ' + (id === null ? 'registrado' : 'actualizado') + ' correctamente.');
       await loadServices();
-    } catch (error) { showMessage(error.message, true); }
-    finally { saveButton.disabled = false; saveButton.textContent = 'Registrar servicio'; }
+    });
   });
-  document.querySelector('#reload-button').addEventListener('click', loadServices);
-  for (const input of Object.values(fields)) input.addEventListener('input', () => {
-    if (input.value.trim()) { input.removeAttribute('aria-invalid'); }
-  });
-  loadServices();
+  reload.addEventListener('click', () => act(loadServices));
+  cancel.addEventListener('click', () => { resetForm(); message(''); });
+  await comprobarAcceso('admin');
+  if (!$('#contenido-privado').hidden) await act(loadServices);
 })();
