@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Subsonic Festival | Gestión de espacios</title>
+    <link rel="stylesheet" href="espacios.css">
+</head>
+<body>
+    <header class="navbar">
+        <a class="logo" href="admin-dashboard.html">SUBSONIC<span>FEST</span></a>
+        <nav aria-label="Administración"><a href="admin-dashboard.html">Volver al panel</a></nav>
+    </header>
+    <main id="contenido-privado" hidden>
+        <h1>Gestión de <span>espacios</span></h1>
+        <p id="bienvenida"></p>
+        <p>Consulta todos los espacios registrados y da de baja los que deban dejar de ofrecerse.</p>
+        <button class="btn secundaria" id="actualizar-espacios" type="button">Actualizar listado</button>
+        <p id="estado-espacios" role="status"></p>
+        <section id="lista-espacios" class="lista" aria-label="Espacios registrados"></section>
+        <dialog id="detalle-espacio" aria-labelledby="nombre-espacio">
+            <h2 id="nombre-espacio"></h2>
+            <dl id="datos-espacio"></dl>
+            <p id="estado-detalle" role="status"></p>
+            <form method="dialog"><button class="btn secundaria" type="submit">Cerrar detalle</button></form>
+        </dialog>
+        <dialog id="baja-espacio" aria-labelledby="titulo-baja">
+            <h2 id="titulo-baja">Dar de baja el espacio</h2>
+            <p id="aviso-baja"></p>
+            <p id="estado-baja" role="status"></p>
+            <button class="btn" id="confirmar-baja" type="button">Confirmar baja</button>
+            <button class="btn secundaria" id="cancelar-baja" type="button">Cancelar</button>
+        </dialog>
+    </main>
+    <script src="sesion.js"></script>
+    <script src="admin-espacios.js"></script>
+</body>
+</html>
