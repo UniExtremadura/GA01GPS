@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from .catalogo import consultar_espacio, consultar_espacios
+from .reservas import router as reservas_router
 
 
 # ==========================================
@@ -15,7 +16,7 @@ from .catalogo import consultar_espacio, consultar_espacios
 
 app = FastAPI(
     title="API Espacios - Subsonic Festival",
-    description="Consulta y filtrado de espacios disponibles - US-009",
+    description="Consulta, filtrado y reserva de espacios - US-009 y US-010",
     version="1.0.0"
 )
 
@@ -26,9 +27,10 @@ app.add_middleware(
         "http://localhost:5500", "http://127.0.0.1:5500",
     ],
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+app.include_router(reservas_router)
 
 
 # ==========================================
@@ -56,9 +58,14 @@ class Espacio(BaseModel):
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
+    es_reserva = request.url.path.endswith(("/disponibilidad", "/reservas"))
     return JSONResponse(status_code=400, content={
         "codigo": 400,
-        "mensaje": "Filtros no validos. Revisa el tipo, la zona y la capacidad minima."
+        "mensaje": (
+            "Revisa el espacio, la fecha y las horas de la reserva."
+            if es_reserva else
+            "Filtros no validos. Revisa el tipo, la zona y la capacidad minima."
+        ),
     })
 
 

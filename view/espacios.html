@@ -22,7 +22,7 @@
 
         <form id="espacios-form" class="filtros" aria-label="Filtrar espacios">
             <div><label for="nombre">Nombre</label><input id="nombre" name="nombre" type="search" maxlength="100" placeholder="Buscar un espacio"></div>
-            <div><label for="tipo">Tipo</label><select id="tipo" name="tipo"><option value="">Todos</option value="escenario">Escenario</option><option value="camping">Camping</option><option value="zona_vip">Zona VIP</option><option value="sala">Sala</option></select></div>
+            <div><label for="tipo">Tipo</label><select id="tipo" name="tipo"><option value="">Todos</option><option value="escenario">Escenario</option><option value="camping">Camping</option><option value="zona_vip">Zona VIP</option><option value="sala">Sala</option></select></div>
             <div><label for="zona">Zona</label><select id="zona" name="zona"><option value="">Todas</option><option>Norte</option><option>Sur</option><option>Este</option><option>Oeste</option></select></div>
             <div><label for="capacidad">Capacidad mínima</label><input id="capacidad" name="capacidad_minima" type="number" min="0" step="1" placeholder="Personas"></div>
             <button class="btn" id="filtrar" type="submit">Filtrar</button>
@@ -39,8 +39,29 @@
             <dl id="detalle-datos"></dl>
             <form method="dialog"><button class="btn" type="submit">Cerrar detalle</button></form>
         </dialog>
+        <dialog id="espacio-reserva" aria-labelledby="reserva-titulo">
+            <h2 id="reserva-titulo">Reservar espacio</h2>
+            <p id="reserva-espacio"></p>
+            <form id="reserva-form">
+                <fieldset id="reserva-franja">
+                    <legend>Franja horaria</legend>
+                    <label for="reserva-fecha">Fecha</label>
+                    <input id="reserva-fecha" name="fecha" type="date" required>
+                    <label for="reserva-inicio">Hora de inicio</label>
+                    <input id="reserva-inicio" name="horaInicio" type="time" required>
+                    <label for="reserva-fin">Hora de fin</label>
+                    <input id="reserva-fin" name="horaFin" type="time" required>
+                </fieldset>
+                <p id="reserva-feedback" role="status"></p>
+                <p id="reserva-acceso" hidden><a href="login.html">Iniciar sesión</a></p>
+                <button class="btn secundaria" id="reserva-consultar" type="button">Comprobar disponibilidad</button>
+                <button class="btn" id="reserva-confirmar" type="submit" disabled>Confirmar reserva</button>
+                <button class="btn secundaria" id="reserva-cerrar" type="button">Cancelar</button>
+            </form>
+        </dialog>
     </main>
     <footer>© 2026 Subsonic Festival.</footer>
+    <script src="sesion.js"></script>
     <script src="espacios.js"></script>
 </body>
 </html>
