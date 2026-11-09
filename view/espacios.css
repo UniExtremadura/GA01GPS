@@ -26,9 +26,14 @@ input, select { width: 100%; padding: .8rem; border: 1px solid #ffffff40; border
 .espacio-card h2 { margin: .7rem 0; font-size: 1.3rem; }
 .espacio-card p { color: var(--muted); }
 .espacio-card .btn { margin-top: auto; }
+.espacio-card .btn + .btn { margin-top: .65rem; }
 .disponible { color: var(--accent); font-size: .8rem; font-weight: 700; }
 dialog { width: min(92vw, 550px); max-height: 85vh; overflow: auto; padding: 2rem; border: 1px solid #ffffff40; border-radius: 16px; background: var(--card); color: var(--text); }
 dialog::backdrop { background: #000b; }
+#reserva-franja { border: 1px solid #ffffff40; border-radius: 8px; }
+#reserva-franja label { margin-top: .5rem; }
+#reserva-form .btn { margin-bottom: .45rem; }
+#reserva-acceso a { color: var(--accent); }
 dt { font-weight: 700; color: var(--accent); }
 dd { margin: 0 0 .8rem; }
 footer { padding: 2rem; text-align: center; border-top: 1px solid #ffffff14; color: var(--muted); }

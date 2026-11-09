@@ -56,4 +56,4 @@ def cerrar_sesion(authorization: str | None = Header(default=None)):
 @app.get('/api/privado')
 def consultar_area_privada(authorization: str | None = Header(default=None)):
     usuario = usuario_autenticado(authorization)
-    return {'mensaje': 'Acceso autorizado.', 'nombre': usuario['nombre'], 'rol': usuario['rol']}
+    return {'mensaje': 'Acceso autorizado.', 'id': usuario['id'], 'nombre': usuario['nombre'], 'rol': usuario['rol']}

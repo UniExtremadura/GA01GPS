@@ -10,12 +10,27 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+<<<<<<< HEAD
 from .catalogo import consultar_espacio, consultar_espacios, espacios, normalizar
 
 app = FastAPI(
     title="API Espacios - Subsonic Festival",
     description="Consulta y administración de espacios del festival.",
     version="1.1.0",
+=======
+from .catalogo import consultar_espacio, consultar_espacios
+from .reservas import router as reservas_router
+
+
+# ==========================================
+# CONFIGURACION DE FASTAPI
+# ==========================================
+
+app = FastAPI(
+    title="API Espacios - Subsonic Festival",
+    description="Consulta, filtrado y reserva de espacios - US-009 y US-010",
+    version="1.0.0"
+>>>>>>> origin/feature/SCRUM-31-US-010-Reserva-de-un-espacio
 )
 
 app.add_middleware(
@@ -25,9 +40,14 @@ app.add_middleware(
         "http://localhost:5500", "http://127.0.0.1:5500",
     ],
     allow_credentials=False,
+<<<<<<< HEAD
     allow_methods=["*"],
+=======
+    allow_methods=["GET", "POST"],
+>>>>>>> origin/feature/SCRUM-31-US-010-Reserva-de-un-espacio
     allow_headers=["*"],
 )
+app.include_router(reservas_router)
 
 TipoEspacio = Literal["escenario", "camping", "zona_vip", "sala"]
 ZonaEspacio = Literal["Norte", "Sur", "Este", "Oeste"]
@@ -88,6 +108,7 @@ def verificar_administrador(authorization: str | None = Header(default=None)):
 
 @app.exception_handler(RequestValidationError)
 async def error_validacion(request, exc):
+<<<<<<< HEAD
     errores = [
         {
             "campo": ".".join(str(parte) for parte in error.get("loc", ())[1:]) or "solicitud",
@@ -103,6 +124,17 @@ async def error_validacion(request, exc):
             "errores": errores,
         },
     )
+=======
+    es_reserva = request.url.path.endswith(("/disponibilidad", "/reservas"))
+    return JSONResponse(status_code=400, content={
+        "codigo": 400,
+        "mensaje": (
+            "Revisa el espacio, la fecha y las horas de la reserva."
+            if es_reserva else
+            "Filtros no validos. Revisa el tipo, la zona y la capacidad minima."
+        ),
+    })
+>>>>>>> origin/feature/SCRUM-31-US-010-Reserva-de-un-espacio
 
 
 @app.exception_handler(HTTPException)
