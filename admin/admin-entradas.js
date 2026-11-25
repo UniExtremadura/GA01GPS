@@ -122,6 +122,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     if (!hasAdminAccess()) { $('#access-denied').hidden = false; return; }
     panel.hidden = false;
-    void loadEntries();
+    loadEntries();
   });
 })();
