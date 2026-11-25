@@ -15,13 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
         feedback.classList.toggle('error', error);
     }
 
-    async function pedir(url) {
+    async function pedir(url, opciones = {}) {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 10000);
         try {
-            const respuesta = await fetch(url, { cache: 'no-store', signal: controller.signal });
+            const respuesta = await fetch(url, { ...opciones, cache: 'no-store', signal: controller.signal });
             const datos = await respuesta.json();
-            if (!respuesta.ok) throw new Error(datos.mensaje || 'No se pudo consultar el servicio.');
+            if (!respuesta.ok) {
+                const error = new Error(datos.mensaje || 'No se pudo completar la operación.');
+                error.status = respuesta.status;
+                throw error;
+            }
             return datos;
         } catch (error) {
             if (error.name === 'AbortError' || error instanceof TypeError) {
@@ -39,6 +43,93 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clase) elemento.className = clase;
         return elemento;
     }
+
+    const reservaDialogo = document.getElementById('espacio-reserva');
+    const reservaForm = document.getElementById('reserva-form');
+    const franja = document.getElementById('reserva-franja');
+    const estadoReserva = document.getElementById('reserva-feedback');
+    const accesoReserva = document.getElementById('reserva-acceso');
+    const consultar = document.getElementById('reserva-consultar');
+    const confirmar = document.getElementById('reserva-confirmar');
+    const cerrar = document.getElementById('reserva-cerrar');
+    let espacioReserva;
+
+    function abrirReserva(espacio) {
+        espacioReserva = espacio;
+        reservaForm.reset();
+        franja.disabled = false;
+        consultar.hidden = confirmar.hidden = false;
+        confirmar.disabled = true;
+        accesoReserva.hidden = true;
+        cerrar.textContent = 'Cancelar';
+        estadoReserva.textContent = '';
+        document.getElementById('reserva-espacio').textContent =
+            `${espacio.nombre} · Zona ${espacio.zona} · ${espacio.capacidad} personas`;
+        reservaDialogo.showModal();
+    }
+
+    async function tramitarReserva(esConfirmacion) {
+        if (cerrar.disabled || !reservaForm.reportValidity()) return;
+        const datos = Object.fromEntries(new FormData(reservaForm));
+        if (datos.horaInicio >= datos.horaFin) {
+            estadoReserva.textContent = 'La hora de fin debe ser posterior a la de inicio.';
+            confirmar.disabled = true;
+            return;
+        }
+        const token = obtenerSesion()?.token;
+        if (esConfirmacion && !token) {
+            estadoReserva.textContent = 'Inicia sesión para confirmar la reserva.';
+            accesoReserva.hidden = false;
+            return;
+        }
+
+        franja.disabled = consultar.disabled = confirmar.disabled = cerrar.disabled = true;
+        accesoReserva.hidden = true;
+        estadoReserva.textContent = esConfirmacion ? 'Confirmando reserva…' : 'Consultando disponibilidad…';
+        const url = `${API_ESPACIOS}/${espacioReserva.id}`;
+        let guardada = false;
+        try {
+            if (esConfirmacion) {
+                const reserva = await pedir(`${url}/reservas`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+                guardada = true;
+                estadoReserva.textContent =
+                    `Reserva #${reserva.idReserva} confirmada: ${reserva.nombreEspacio}, ${reserva.fecha} de ${reserva.horaInicio} a ${reserva.horaFin}.`;
+                consultar.hidden = confirmar.hidden = true;
+                cerrar.textContent = 'Cerrar';
+            } else {
+                const { disponible } = await pedir(`${url}/disponibilidad?${new URLSearchParams(datos)}`);
+                confirmar.disabled = !disponible;
+                estadoReserva.textContent = disponible
+                    ? 'Franja disponible. Ya puedes confirmar la reserva.'
+                    : 'El espacio ya está reservado en esa franja. Elige otro horario.';
+            }
+        } catch (error) {
+            estadoReserva.textContent = error.message;
+            accesoReserva.hidden = error.status !== 401;
+        } finally {
+            franja.disabled = guardada;
+            consultar.disabled = cerrar.disabled = false;
+        }
+    }
+
+    reservaForm.addEventListener('input', () => {
+        confirmar.disabled = true;
+        accesoReserva.hidden = true;
+        estadoReserva.textContent = '';
+    });
+    consultar.addEventListener('click', () => tramitarReserva(false));
+    reservaForm.addEventListener('submit', (evento) => {
+        evento.preventDefault();
+        if (!confirmar.disabled) tramitarReserva(true);
+    });
+    cerrar.addEventListener('click', () => reservaDialogo.close());
+    reservaDialogo.addEventListener('cancel', (evento) => {
+        if (cerrar.disabled) evento.preventDefault();
+    });
 
     async function abrirDetalle(id, boton) {
         boton.disabled = true;
@@ -90,12 +181,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 boton.type = 'button';
                 boton.setAttribute('aria-label', `Ver detalle de ${espacio.nombre}`);
                 boton.addEventListener('click', () => abrirDetalle(espacio.id, boton));
+                const reservar = crearElemento('button', 'Reservar', 'btn');
+                reservar.type = 'button';
+                reservar.setAttribute('aria-label', `Reservar ${espacio.nombre}`);
+                reservar.addEventListener('click', () => abrirReserva(espacio));
                 tarjeta.append(
                     crearElemento('span', 'DISPONIBLE', 'disponible'),
                     crearElemento('h2', espacio.nombre),
                     crearElemento('p', `${tipos[espacio.tipo] || espacio.tipo} · Zona ${espacio.zona}`),
                     crearElemento('p', `Capacidad: ${espacio.capacidad} personas`),
-                    crearElemento('p', espacio.descripcion), boton
+                    crearElemento('p', espacio.descripcion), boton, reservar
                 );
                 lista.append(tarjeta);
             }

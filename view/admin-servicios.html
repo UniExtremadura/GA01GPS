@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090d">
+  <title>Gestión de servicios | Subsonic Admin</title>
+  <link rel="stylesheet" href="admin-servicios.css">
+  <script src="sesion.js" defer></script>
+  <script src="admin-servicios.js" defer></script>
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="admin-dashboard.html">SUBSONIC<span>ADMIN</span></a>
+    <a href="servicios.html">Ver catálogo público</a>
+  </header>
+  <main class="layout" id="contenido-privado" hidden>
+    <section class="intro">
+      <p class="eyebrow">PANEL DE ADMINISTRACIÓN</p>
+      <h1>Gestionar <span>servicios</span></h1>
+      <p id="bienvenida"></p>
+      <p>Consulta, registra y actualiza los servicios del festival. Los campos marcados con * son obligatorios.</p>
+    </section>
+    <section class="panel" aria-labelledby="form-title">
+      <h2 id="form-title">Datos del servicio</h2>
+      <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+      <form id="service-form">
+        <label for="name">Nombre *</label>
+        <input id="name" name="nombre" type="text" minlength="2" maxlength="100" required autocomplete="off">
+        <small class="field-error" id="name-error"></small>
+
+        <label for="category">Categoría *</label>
+        <input id="category" name="categoria" type="text" minlength="2" maxlength="60" required placeholder="Ej.: Bienestar">
+        <small class="field-error" id="category-error"></small>
+
+        <label for="description">Descripción *</label>
+        <textarea id="description" name="descripcion" minlength="5" maxlength="500" rows="4" required></textarea>
+        <small class="field-error" id="description-error"></small>
+
+        <label for="price">Precio (€) *</label>
+        <input id="price" name="precio" type="number" min="0" step="0.01" required inputmode="decimal">
+        <small class="field-error" id="price-error"></small>
+
+        <label class="check-row"><input id="available" name="disponible" type="checkbox" checked> Disponible en el catálogo</label>
+        <button id="save-button" type="submit">Registrar servicio</button>
+        <button id="cancel-edit" class="secondary" type="button" hidden>Cancelar edición</button>
+      </form>
+    </section>
+    <section class="panel catalog" aria-labelledby="catalog-title">
+      <div class="catalog-heading"><div><p class="eyebrow">VERIFICACIÓN</p><h2 id="catalog-title">Servicios registrados</h2></div><button id="reload-button" class="secondary" type="button">Actualizar</button></div>
+      <p id="list-status" class="list-status" role="status" aria-live="polite">Cargando…</p>
+      <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="service-rows"></tbody></table></div>
+      <dialog id="service-detail" class="panel" aria-labelledby="detail-title">
+        <h2 id="detail-title">Detalle del servicio</h2>
+        <dl id="detail-data"></dl>
+        <form method="dialog"><button class="secondary" type="submit">Cerrar</button></form>
+      </dialog>
+    </section>
+  </main>
+</body>
+</html>

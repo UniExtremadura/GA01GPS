@@ -119,3 +119,14 @@ def desactivar_usuario(usuario_id: int):
             }
             
     raise HTTPException(status_code=404, detail="Usuario no encontrado para desactivar.")
+# Métodos de pago ficticios para la compra académica de entradas (sin cobros reales).
+METODOS_PAGO = {
+    1: [{"id": 1, "tipo": "tarjeta", "titular": "Admin Principal", "ultimosDigitos": "0001", "predeterminado": True}],
+    2: [{"id": 2, "tipo": "tarjeta", "titular": "Cliente Ejemplo", "ultimosDigitos": "0002", "predeterminado": True}],
+}
+
+@app.get("/api/usuarios/{usuario_id}/metodos-pago")
+def listar_metodos_pago(usuario_id: int):
+    if not any(usuario.id == usuario_id for usuario in DB_USUARIOS):
+        raise HTTPException(status_code=404, detail="Usuario no encontrado.")
+    return METODOS_PAGO.get(usuario_id, [])
