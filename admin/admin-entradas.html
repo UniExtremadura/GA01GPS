@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090d"><title>Administrar entradas | Subsonic Festival</title>
+  <link rel="stylesheet" href="admin-entradas.css">
+</head>
+<body>
+  <header class="ae-nav"><a class="ae-logo" href="index.html">SUBSONIC<span>FEST</span></a><nav aria-label="Navegación"><a href="index.html">Inicio</a><a href="entradas.html">Entradas públicas</a><a class="active" href="admin-entradas.html" aria-current="page">Gestión</a></nav></header>
+  <main class="ae-main">
+    <section class="ae-hero"><span class="ae-eyebrow">ADMINISTRACIÓN · IT-003</span><h1>Gestión de <span>entradas</span></h1><p>Consulta los tipos de entrada registrados y actualiza sus datos y disponibilidad.</p></section>
+    <section id="access-denied" class="ae-notice" hidden role="alert"><h2>Acceso restringido</h2><p>Esta pantalla es para administradores. Inicia sesión con una cuenta autorizada.</p><a class="ae-button" href="login.html">Ir al inicio de sesión</a></section>
+    <section id="admin-panel" hidden>
+      <div class="ae-heading"><div><span class="ae-eyebrow">CATÁLOGO</span><h2>Entradas registradas</h2></div><button id="reload" class="ae-button ae-secondary" type="button">Actualizar lista</button></div>
+      <p id="list-status" class="ae-status" role="status" aria-live="polite">Cargando entradas…</p>
+      <div class="ae-table-wrap"><table><thead><tr><th>Tipo</th><th>Precio</th><th>Stock total</th><th>Disponible</th><th>Estado</th><th>Acción</th></tr></thead><tbody id="ticket-rows"></tbody></table></div>
+      <section id="edit-section" class="ae-editor" aria-labelledby="edit-title" hidden>
+        <div class="ae-heading"><div><span class="ae-eyebrow">DETALLE Y ACTUALIZACIÓN</span><h2 id="edit-title">Editar entrada</h2></div><button id="close-editor" class="ae-button ae-secondary" type="button">Cerrar</button></div>
+        <p id="edit-status" class="ae-status" role="status" aria-live="polite"></p>
+        <form id="ticket-form" novalidate>
+          <input id="ticket-id" type="hidden">
+          <label>Tipo de entrada<select id="ticket-name" required><option value="vip">Abono VIP</option><option value="abono_completo">Abono completo</option><option value="abono_un_dia">Abono de un día</option></select></label>
+          <label class="wide">Descripción<textarea id="ticket-description" rows="3" maxlength="500"></textarea></label>
+          <label>Precio (€)<input id="ticket-price" type="number" min="0" step="0.01" required></label>
+          <label>Stock total<input id="ticket-stock" type="number" min="1" step="1" required></label>
+          <label>Válida desde<input id="ticket-start" type="date" required></label>
+          <label>Válida hasta<input id="ticket-end" type="date" required></label>
+          <p id="stock-hint" class="ae-hint wide"></p>
+          <div class="ae-form-actions wide"><button class="ae-button" type="submit">Guardar cambios</button></div>
+        </form>
+      </section>
+    </section>
+  </main>
+  <div id="ae-toast" class="ae-toast" role="status" aria-live="polite"></div>
+  <footer class="ae-footer">© 2026 Subsonic Festival. Todos los derechos reservados.</footer>
+  <script src="admin-entradas.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090d">
+  <title>Servicios | Subsonic Festival</title>
+  <link rel="stylesheet" href="servicios.css">
+</head>
+<body>
+  <header class="svc-nav">
+    <a class="svc-logo" href="index.html">SUBSONIC<span>FEST</span></a>
+    <nav aria-label="Navegación principal">
+      <a href="index.html">Inicio</a><a href="entradas.html">Entradas</a>
+      <a class="is-current" href="servicios.html" aria-current="page">Servicios</a>
+      <a href="registro.html">Registro</a>
+    </nav>
+  </header>
+
+  <main class="svc-main">
+    <section class="svc-hero" aria-labelledby="svc-title">
+      <span class="svc-eyebrow">SUBSONIC FESTIVAL · IT-003</span>
+      <h1 id="svc-title">Servicios para vivir <span>el festival</span></h1>
+      <p>Explora las opciones disponibles, consulta sus detalles y confirma la que quieras añadir a tu cuenta.</p>
+    </section>
+
+    <section class="svc-section" aria-labelledby="catalog-title">
+      <div class="svc-section-head"><div><span class="svc-eyebrow">CATÁLOGO</span><h2 id="catalog-title">Servicios disponibles</h2></div>
+        <label class="svc-search-label" for="svc-search">Buscar servicio</label><input id="svc-search" type="search" placeholder="Buscar…" autocomplete="off">
+      </div>
+      <p id="svc-status" class="svc-status" role="status" aria-live="polite">Cargando servicios…</p>
+      <div id="svc-grid" class="svc-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="svc-section svc-owned" aria-labelledby="owned-title">
+      <div class="svc-section-head"><div><span class="svc-eyebrow">TU CUENTA</span><h2 id="owned-title">Mis servicios</h2></div></div>
+      <p id="owned-status" class="svc-status" role="status" aria-live="polite">Todavía no has añadido servicios.</p>
+      <ul id="owned-list" class="owned-list"></ul>
+    </section>
+  </main>
+
+  <dialog id="svc-dialog" class="svc-dialog" aria-labelledby="dialog-title">
+    <form method="dialog"><button class="svc-close" aria-label="Cerrar">×</button></form>
+    <span class="svc-eyebrow">DETALLE DEL SERVICIO</span><h2 id="dialog-title"></h2>
+    <p id="dialog-description"></p><p id="dialog-price" class="dialog-price"></p>
+    <p id="dialog-availability" class="svc-status"></p>
+    <div class="dialog-actions"><button id="dialog-cancel" class="svc-button svc-secondary" type="button">Cancelar</button><button id="dialog-buy" class="svc-button" type="button">Añadir a mi cuenta</button></div>
+  </dialog>
+  <div id="svc-toast" class="svc-toast" role="status" aria-live="polite"></div>
+  <footer class="svc-footer">© 2026 Subsonic Festival. Todos los derechos reservados.</footer>
+  <script src="servicios.js" defer></script>
+</body>
+</html>

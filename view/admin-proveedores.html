@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Proveedores | Subsonic Admin</title>
+    <link rel="stylesheet" href="style_2.css">
+    <style>
+        /* Estilos específicos para el panel de administración */
+        .admin-layout { display: flex; gap: 20px; padding: 20px; flex-wrap: wrap; }
+        .panel { background: #14141c; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; flex: 1; min-width: 300px; }
+        .tabla-admin { width: 100%; border-collapse: collapse; margin-top: 15px; color: white; text-align: left; }
+        .tabla-admin th { background: #1c1c27; padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.1); color: #c7ff3d; }
+        .tabla-admin td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; border-radius: 6px; cursor: pointer; border: none; font-weight: bold; }
+        .btn-edit { background: #ff4d9d; color: white; margin-right: 5px; }
+        .btn-delete { background: #333; color: #ff9bbf; border: 1px solid #ff9bbf; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">SUBSONIC<span>ADMIN</span></div>
+        <nav><a href="admin-dashboard.html">Volver al Panel</a></nav>
+    </header>
+
+    <main class="admin-layout">
+        <!-- Panel Izquierdo: Lista de Proveedores (AC-01 y AC-04) -->
+        <section class="panel">
+            <h2>Directorio de <span class="gradient-text">Proveedores</span></h2>
+            <div id="admin-feedback" class="registro-feedback" style="display: none; margin-bottom: 15px;"></div>
+            
+            <table class="tabla-admin">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Servicio</th>
+                        <th>Contacto</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-proveedores-body">
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Panel Derecho: Formulario Crear/Editar (AC-02 y AC-03) -->
+        <section class="panel" style="flex: 0.5;">
+            <h2 id="form-titulo">Registrar Proveedor</h2>
+            <form id="form-proveedor" onsubmit="guardarProveedor(event)">
+                <input type="hidden" id="prov-id">
+                
+                <div class="campo-registro campo-completo">
+                    <label>Nombre del proveedor *</label>
+                    <input type="text" id="prov-nombre" required>
+                </div>
+                <div class="campo-registro campo-completo">
+                    <label>Servicio o Producto *</label>
+                    <input type="text" id="prov-servicio" required>
+                </div>
+                <div class="campo-registro campo-completo">
+                    <label>Email de Contacto *</label>
+                    <input type="email" id="prov-contacto" required>
+                </div>
+                <div class="campo-registro campo-completo">
+                    <label>Estado</label>
+                    <select id="prov-estado" style="width: 100%; padding: 10px; border-radius: 8px; background: #09090d; color: white; border: 1px solid rgba(255,255,255,0.1);">
+                        <option value="activo">Activo</option>
+                        <option value="deshabilitado">Deshabilitado</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px;">Guardar Proveedor</button>
+                <button type="button" class="btn" style="width: 100%; margin-top: 10px; background: transparent; border: 1px solid white; color: white;" onclick="limpiarFormulario()">Cancelar</button>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000/api/proveedores";
+        // Simulamos que el admin está logueado leyendo el localStorage (AC-05)
+        const usuarioSesion = JSON.parse(localStorage.getItem("usuario_subsonic")) || { rol: "admin" }; 
+
+        // AC-05: Redirigir si no es admin
+        if (usuarioSesion.rol !== "admin") {
+            alert("Acceso denegado. Área exclusiva de administración.");
+            window.location.href = "index.html";
+        }
+
+        // Headers base con el rol para pasar la seguridad del backend
+        const fetchHeaders = {
+            "Content-Type": "application/json",
+            "rol_usuario": usuarioSesion.rol
+        };
+
+        // AC-06: Mostrar mensajes de resultado
+        function mostrarMensaje(texto, esError = false) {
+            const fb = document.getElementById("admin-feedback");
+            fb.textContent = texto;
+            fb.className = esError ? "registro-feedback registro-error" : "registro-feedback registro-exito";
+            fb.style.display = "block";
+            setTimeout(() => fb.style.display = "none", 4000);
+        }
+
+        // AC-01: Cargar datos
+        async function cargarProveedores() {
+            try {
+                const res = await fetch(API_URL, { headers: fetchHeaders });
+                const datos = await res.json();
+                
+                const tbody = document.getElementById("tabla-proveedores-body");
+                tbody.innerHTML = "";
+                
+                datos.forEach(p => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>#${p.id}</td>
+                            <td><strong>${p.nombre}</strong></td>
+                            <td>${p.servicio_ofrecido}</td>
+                            <td>${p.contacto}</td>
+                            <td><span style="color: ${p.estado==='activo' ? '#c7ff3d' : '#ff9bbf'}">${p.estado.toUpperCase()}</span></td>
+                            <td>
+                                <button class="btn-sm btn-edit" onclick="prepararEdicion(${p.id}, '${p.nombre}', '${p.servicio_ofrecido}', '${p.contacto}', '${p.estado}')">Editar</button>
+                                <button class="btn-sm btn-delete" onclick="eliminarProveedor(${p.id})">Borrar</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                mostrarMensaje("Error al conectar con el servidor", true);
+            }
+        }
+
+        // AC-02 y AC-03: Crear o Actualizar
+        async function guardarProveedor(evento) {
+            evento.preventDefault();
+            const id = document.getElementById("prov-id").value;
+            const datosProv = {
+                nombre: document.getElementById("prov-nombre").value,
+                servicio_ofrecido: document.getElementById("prov-servicio").value,
+                contacto: document.getElementById("prov-contacto").value,
+                estado: document.getElementById("prov-estado").value
+            };
+
+            const metodo = id ? "PUT" : "POST";
+            const urlFinal = id ? `${API_URL}/${id}` : API_URL;
+
+            try {
+                const res = await fetch(urlFinal, {
+                    method: metodo,
+                    headers: fetchHeaders,
+                    body: JSON.stringify(datosProv)
+                });
+
+                if (res.ok) {
+                    mostrarMensaje(id ? "Proveedor actualizado correctamente." : "Proveedor registrado correctamente.");
+                    limpiarFormulario();
+                    cargarProveedores(); // Refrescar tabla (AC-07)
+                } else {
+                    mostrarMensaje("Error al guardar los datos.", true);
+                }
+            } catch (e) {
+                mostrarMensaje("Error de conexión.", true);
+            }
+        }
+
+        // AC-04: Eliminar
+        async function eliminarProveedor(id) {
+            if (!confirm("¿Estás seguro de que quieres eliminar este proveedor?")) return;
+
+            try {
+                const res = await fetch(`${API_URL}/${id}`, { method: "DELETE", headers: fetchHeaders });
+                if (res.ok) {
+                    mostrarMensaje("Proveedor eliminado correctamente.");
+                    cargarProveedores(); // Refrescar tabla (AC-07)
+                } else {
+                    mostrarMensaje("No se pudo eliminar el proveedor.", true);
+                }
+            } catch (e) {
+                mostrarMensaje("Error de conexión.", true);
+            }
+        }
+
+        function prepararEdicion(id, nombre, servicio, contacto, estado) {
+            document.getElementById("form-titulo").textContent = "Editar Proveedor #" + id;
+            document.getElementById("prov-id").value = id;
+            document.getElementById("prov-nombre").value = nombre;
+            document.getElementById("prov-servicio").value = servicio;
+            document.getElementById("prov-contacto").value = contacto;
+            document.getElementById("prov-estado").value = estado;
+        }
+
+        function limpiarFormulario() {
+            document.getElementById("form-titulo").textContent = "Registrar Proveedor";
+            document.getElementById("form-proveedor").reset();
+            document.getElementById("prov-id").value = "";
+        }
+
+        // Cargar al iniciar
+        cargarProveedores();
+    </script>
+</body>
+</html>

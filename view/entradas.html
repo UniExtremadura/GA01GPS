@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090d"><title>Adquirir entradas | Subsonic Festival</title>
+  <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="adquisicion.css">
+</head>
+<body>
+  <header class="navbar">
+    <a class="logo" href="index.html" aria-label="Subsonic Fest, inicio">SUBSONIC<span>FEST</span></a>
+    <nav aria-label="Navegación principal"><ul class="nav-links"><li><a href="index.html">Inicio</a></li><li><a class="active" href="entradas.html" aria-current="page">Entradas</a></li><li><a href="escaleta.html">Escaleta</a></li><li><a href="tienda.html">Tienda</a></li></ul></nav>
+  </header>
+  <main class="tickets-page">
+    <section class="tickets-hero"><a class="back-link" href="index.html">← Volver al inicio</a><span class="badge">EDICIÓN 2026 · ENTRADAS</span><h1>Tu acceso a <span class="gradient-text">SUBSONIC</span></h1><p>Elige tu entrada y cantidad. Revisaremos la disponibilidad antes de confirmar.</p></section>
+    <section class="tickets-section" aria-labelledby="ticket-options-title">
+      <div class="tickets-heading"><div><span class="eyebrow">ENTRADAS Y ABONOS</span><h2 id="ticket-options-title">Entradas disponibles</h2></div><p>Precios y disponibilidad actualizados.</p></div>
+      <p id="tickets-status" class="tickets-message" role="status" aria-live="polite">Cargando entradas…</p>
+      <div id="ticket-grid" class="ticket-grid" aria-label="Entradas disponibles"></div>
+      <p id="tickets-error" class="tickets-message tickets-error" role="alert" hidden></p>
+    </section>
+    <section id="my-purchase" class="purchase-result" aria-live="polite" hidden></section>
+  </main>
+
+  <dialog id="purchase-dialog" class="purchase-dialog" aria-labelledby="purchase-title">
+    <form method="dialog"><button class="purchase-close" aria-label="Cerrar">×</button></form>
+    <span class="eyebrow">COMPRA SIMULADA</span><h2 id="purchase-title">Confirmar entrada</h2>
+    <p id="purchase-description"></p>
+    <label for="purchase-quantity">Cantidad</label>
+    <input id="purchase-quantity" type="number" min="1" step="1" value="1" required>
+    <p id="purchase-stock" class="purchase-stock"></p>
+    <p class="purchase-total-label">Importe total <strong id="purchase-total">0,00 €</strong></p>
+    <p id="purchase-message" class="purchase-message" role="status" aria-live="polite"></p>
+    <div class="purchase-actions"><button id="purchase-cancel" class="btn purchase-secondary" type="button">Cancelar</button><button id="purchase-confirm" class="btn purchase-confirm" type="button">Confirmar adquisición</button></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <footer><p>&copy; 2026 Subsonic Festival. Todos los derechos reservados.</p></footer>
+  <script src="entradas.js"></script>
+</body>
+</html>
+

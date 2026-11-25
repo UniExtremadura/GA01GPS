@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subsonic Festival | Proveedores</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+    <header class="navbar">
+        <div class="logo">SUBSONIC<span>FEST</span></div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="entradas.html">Entradas</a></li>
+                <li><a href="escaleta.html">Escaleta</a></li>
+                <li><a href="tienda.html">Tienda</a></li>
+                <li><a href="proveedores.html" class="active" aria-current="page">Proveedores</a></li>
+            </ul>
+        </nav>
+        <button class="menu-toggle" id="mobile-menu" aria-label="Abrir menú">
+            ☰
+        </button>
+    </header>
+
+    <main class="tickets-page">
+        <!-- Cabecera estilo Subsonic -->
+        <section class="tickets-hero">
+            <a href="index.html" class="back-link">&larr; Volver a Inicio</a>
+            <span class="badge">COLABORADORES OFICIALES</span>
+            <h1>DIRECTORIO DE <span class="gradient-text">PROVEEDORES</span></h1>
+            <p>Consulta la información de las empresas tecnológicas, logísticas y de restauración asociadas a Subsonic Festival.</p>
+        </section>
+
+        <!-- Listado de Proveedores (US-015-AC-01 y AC-02) -->
+        <section class="tickets-section">
+            <div class="tickets-heading">
+                <div>
+                    <span class="eyebrow">RED DE SUMINISTRO</span>
+                    <h2>Proveedores Disponibles</h2>
+                </div>
+                <p>Selecciona cualquier proveedor para consultar su ficha técnica detallada.</p>
+            </div>
+
+            <!-- Contenedor dinámico de tarjetas -->
+            <div id="grid-proveedores" class="ticket-grid"></div>
+
+            <!-- Mensaje cuando no hay proveedores disponibles (US-015-AC-05) -->
+            <div id="sin-proveedores" class="schedule-notice" style="display: none;">
+                <div class="schedule-notice-icon">ℹ️</div>
+                <div>
+                    <h3>No existen proveedores disponibles</h3>
+                    <p>En este momento no hay proveedores registrados o habilitados en la plataforma. Por favor, vuelve a consultarlo más adelante.</p>
+                </div>
+            </div>
+
+            <!-- Panel de detalle al seleccionar un proveedor (US-015-AC-03 y AC-04) -->
+            <div id="detalle-proveedor" class="cashless-notice" style="display: none; margin-top: 2.2rem;">
+                <div class="cashless-icon" id="detalle-icono">🏢</div>
+                <div style="width: 100%;">
+                    <span class="eyebrow" id="detalle-categoria">CATEGORÍA</span>
+                    <h3 id="detalle-nombre" style="font-size: 1.25rem; margin: 0.2rem 0 0.5rem; color: var(--text-light);">Nombre del Proveedor</h3>
+                    <p id="detalle-descripcion" style="margin-bottom: 0.8rem;"></p>
+                    <p style="color: var(--text-light); font-size: 0.84rem;">
+                        <strong>Identificador:</strong> <span id="detalle-codigo"></span> &nbsp;|&nbsp;
+                        <strong>Contacto:</strong> <span id="detalle-contacto"></span> &nbsp;|&nbsp;
+                        <strong>Servicio:</strong> <span id="detalle-servicio"></span>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast">Información cargada</div>
+
+    <footer>
+        <p>&copy; 2026 Subsonic Festival. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Datos registrados en el sistema (US-015-AC-04)
+        const proveedoresRegistrados = [
+            {
+                id: 1,
+                codigo: "PROV-001",
+                nombre: "BassLine Audio Systems",
+                categoria: "SONIDO E ILUMINACIÓN",
+                icono: "🔊",
+                resumen: "Suministro de sistemas line array y control láser para escenarios principales.",
+                descripcion: "Empresa encargada de la ingeniería acústica integral, montaje de estructuras de iluminación reactiva y mantenimiento técnico durante los 3 días del festival.",
+                contacto: "tecnico@basslineaudio.es",
+                servicio: "Escenarios Main y Underground",
+                disponible: true,
+                destacado: true
+            },
+            {
+                id: 2,
+                codigo: "PROV-002",
+                nombre: "Neonrinks Catering & Bar",
+                categoria: "HOSTELERÍA Y RESTAURACIÓN",
+                icono: "🍹",
+                resumen: "Gestión de barras, suministro de bebidas y zona gastronómica Food Trucks.",
+                descripcion: "Proveedor oficial de bebidas, logística de frío industrial y opciones gastronómicas (incluyendo menús veganos y sin gluten) en todo el recinto.",
+                contacto: "logistica@neondrinks.com",
+                servicio: "Barras centrales y Zona VIP",
+                disponible: true,
+                destacado: false
+            },
+            {
+                id: 3,
+                codigo: "PROV-003",
+                nombre: "Aegis Security & Access",
+                categoria: "SEGURIDAD Y CONTROL",
+                icono: "🛡️",
+                resumen: "Control de accesos biométrico/QR, pulseras cashless y seguridad perimetral.",
+                descripcion: "Especialistas en eventos de gran aforo. Gestionan la validación de entradas, los puntos de asistencia sanitaria preventiva y los protocolos de evacuación.",
+                contacto: "operaciones@aegissecurity.es",
+                servicio: "Recinto completo y Accesos",
+                disponible: true,
+                destacado: false
+            }
+        ];
+
+        function renderizarProveedores() {
+            const grid = document.getElementById("grid-proveedores");
+            const avisoVacio = document.getElementById("sin-proveedores");
+
+            // Filtramos solo los disponibles (US-015-AC-01)
+            const disponibles = proveedoresRegistrados.filter(p => p.disponible);
+
+            // US-015-AC-05: Si no existen proveedores disponibles, informa de forma comprensible
+            if (disponibles.length === 0) {
+                grid.style.display = "none";
+                avisoVacio.style.display = "flex";
+                return;
+            }
+
+            grid.innerHTML = disponibles.map(prov => `
+                <article class="ticket-card ${prov.destacado ? 'ticket-card-featured' : ''}">
+                    ${prov.destacado ? '<div class="ticket-ribbon">PRINCIPAL</div>' : ''}
+                    <div class="ticket-topline">
+                        <div class="ticket-icon">${prov.icono}</div>
+                        <span class="ticket-type">${prov.categoria}</span>
+                    </div>
+                    <h3>${prov.nombre}</h3>
+                    <p class="ticket-description">${prov.resumen}</p>
+                    <ul class="ticket-benefits">
+                        <li>ID Registro: ${prov.codigo}</li>
+                        <li>Área: ${prov.servicio}</li>
+                        <li>Estado: Operativo y verificado</li>
+                    </ul>
+                    <button class="btn ${prov.destacado ? 'btn-primary' : 'btn-secondary'} ticket-button" onclick="seleccionarProveedor(${prov.id})">
+                        Consultar información
+                    </button>
+                </article>
+            `).join("");
+        }
+
+        // US-015-AC-03: Seleccionar un proveedor para consultar su información disponible
+        function seleccionarProveedor(id) {
+            const prov = proveedoresRegistrados.find(p => p.id === id && p.disponible);
+            if (!prov) return;
+
+            document.getElementById("detalle-icono").textContent = prov.icono;
+            document.getElementById("detalle-categoria").textContent = prov.categoria;
+            document.getElementById("detalle-nombre").textContent = prov.nombre;
+            document.getElementById("detalle-descripcion").textContent = prov.descripcion;
+            document.getElementById("detalle-codigo").textContent = prov.codigo;
+            document.getElementById("detalle-contacto").textContent = prov.contacto;
+            document.getElementById("detalle-servicio").textContent = prov.servicio;
+
+            const panel = document.getElementById("detalle-proveedor");
+            panel.style.display = "flex";
+            panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        document.addEventListener("DOMContentLoaded", renderizarProveedores);
+    </script>
+</body>
+</html>

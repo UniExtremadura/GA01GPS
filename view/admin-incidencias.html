@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestión de incidencias | Subsonic Festival</title>
+  <link rel="stylesheet" href="style_2.css">
+  <style>
+    body { background:#101018; color:#f5f5f7; font-family:Arial,sans-serif; }
+    main { max-width:1050px; margin:45px auto; padding:20px; }
+    h1 { font-size:2rem; } .controles { display:flex; gap:12px; margin:20px 0; flex-wrap:wrap; }
+    button,select { padding:10px 14px; border-radius:7px; cursor:pointer; }
+    table { width:100%; border-collapse:collapse; background:#1e1e2a; }
+    th,td { padding:12px; border-bottom:1px solid #454554; text-align:left; }
+    .pendiente { color:#ffce73; } .resuelta { color:#80e6b2; }
+    #mensaje { min-height:25px; } .tabla { overflow-x:auto; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Gestión de incidencias</h1>
+    <p>Consulta las incidencias y actualiza su estado.</p>
+    <div class="controles">
+      <label for="filtro">Mostrar:</label>
+      <select id="filtro"><option value="">Todas</option><option>Pendiente</option><option>Resuelta</option></select>
+      <button id="recargar" type="button">Actualizar listado</button>
+    </div>
+    <p id="mensaje" role="status" aria-live="polite"></p>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>ID</th><th>Usuario</th><th>Título</th><th>Descripción</th><th>Fecha</th><th>Estado</th><th>Acción</th></tr></thead>
+        <tbody id="filas"><tr><td colspan="7">Cargando...</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+  <script src="admin-incidencias.js"></script>
+</body>
+</html>
